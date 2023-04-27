@@ -1,7 +1,47 @@
-#Characterize Anything
+# Characterize Anything
 
 We plan to create yet another inspirational demo by marrying Segment Anything with ChatGPT, where we bring everything we see to life that we can talk to and make friends with.
 
-Hopefully we will continue to polish our idea and land in APP stores where everyone can easily access.
+Hopefully we will continue to polish our idea and make it an amazing product.
+
+## Background
+
+There are already various [Awesome-Anything](https://github.com/VainF/Awesome-Anything) projects in the community, and we decide to join the family.
+
+**💡 How does this idea come out?**
+
+- We've long been fascinated by the idea of AI-driven Characters / Avatar (both UGC and PGC ones). [Character.ai](https://beta.character.ai/) is one of the best places where you could get an interesting experience.
+- [Segment Anything](https://github.com/facebookresearch/segment-anything) is just amazing. Period.
+- ChatGPT is just amazing. Period.
+- Inspirai inspires people.
+
+**🌟 What are potential applications?**
+
+Well, we ask ChatGPT to help us with the answer (Basically we ask it to write advertisement for the concept).
+
+- ToC: For kids
+
+> ChatGPT: Are your kids curious little explorers, always eager to learn about new things? Well, have no fear, because "characterize anything" is here! Your kiddos can now chat it up with any object they want to learn about, ask all their burning questions, and maybe even make some new pals along the way. Imagination and curiosity will reach an all-time high with this awesome concept. So who knows? Maybe your child will even become besties with the living room lamp or have a heart-to-heart with the kitchen sink. The possibilities are endless!
+
+- ToC: For Adults
+
+Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera](https://www.youtube.com/watch?v=i0invZZ_6aY)
+
+> ChatGPT: Grown-ups, are you tired of the same old boring conversations with inanimate objects? Do you dread talking to your houseplants because they never seem to talk back? Well, fear not! The amazing concept of "characterize anything" is not just for kids anymore. Yes, you can now have meaningful conversations with your favorite household items or even your car. Did you ever think you'd bond with your fridge over your mutual love of cheese? Or have a heated debate with your computer about which is better, Apple or Windows? The possibilities are endless, and with "characterize anything," you'll never feel alone in a room again. So go ahead, channel your inner child and start talking to your lamp. You might just learn something new about each other.
+
+- ToB
+
+> ChatGPT: Attention! Are you tired of the same old boring sales and marketing pitches? Do you want to revolutionize the way you connect with your customers? Look no further than "characterize anything"! With this unique concept, you can bring your products and services to life in a whole new way. Imagine your customers being able to engage in conversations with your products, asking questions, and getting to know them on a deeper level. Your products will no longer be just inanimate objects, but characters with personalities and stories to share. Plus, this innovative approach to customer engagement is sure to set your business apart from the competition. So why not give "characterize anything" a try and let your customers get to know your products like never before? They'll be hooked in no time!
+
+## Demo
+
+## System Architecture
+
+## Citation
+
+## Acknowledgement
+
+## Contributor
 
 WIP ...
+
