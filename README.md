@@ -21,6 +21,10 @@ Well, we ask ChatGPT to help us with the answer (Basically we ask it to write ad
 
 - ToC: For kids
 
+<div align=center>
+<img src="./assets/application_child.png"/>
+</div>
+
 > ChatGPT: Are your kids curious little explorers, always eager to learn about new things? Well, have no fear, because "characterize anything" is here! Your kiddos can now chat it up with any object they want to learn about, ask all their burning questions, and maybe even make some new pals along the way. Imagination and curiosity will reach an all-time high with this awesome concept. So who knows? Maybe your child will even become besties with the living room lamp or have a heart-to-heart with the kitchen sink. The possibilities are endless!
 
 - ToC: For Adults
