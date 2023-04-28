@@ -1,16 +1,16 @@
 # Characterize Anything
 
-We plan to create yet another inspirational demo by marrying Segment Anything with ChatGPT, where we bring everything we see to life that we can talk to and make friends with.
+We plan to create yet another inspirational demo by marrying Segment Anything with ChatGPT, where we bring everything we see to life as characters that we can talk to and make friends with.
 
 Hopefully we will continue to polish our idea and make it an amazing product.
 
 ## Background
 
-There are already various [Awesome-Anything](https://github.com/VainF/Awesome-Anything) projects in the community, and we decide to join the family.
+There are already various [Awesome-Anything](https://github.com/VainF/Awesome-Anything) projects in the community, and "characterize anything" would like to join the family.
 
 **💡 How does this idea come out?**
 
-- We've long been fascinated by the idea of AI-driven Characters / Avatar (both UGC and PGC ones). [Character.ai](https://beta.character.ai/) is one of the best places where you could get an interesting experience.
+- We've long been fascinated by the idea of AI-driven characters / avatars (both UGC and PGC ones). [Character.ai](https://beta.character.ai/) is one of the best places where you could get an interesting experience.
 - [Segment Anything](https://github.com/facebookresearch/segment-anything) is just amazing. Period.
 - ChatGPT is just amazing. Period.
 - Inspirai inspires people.
@@ -41,9 +41,17 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 ## System Architecture
 
-## Citation
+## GPU memory usage
 
 ## Acknowledgement
+
+We appreciate the open source of the following preliminary projects:
+
+[Segment Anything](https://github.com/facebookresearch/segment-anything) is a strong segmentation foundation model that supports diverse prompts.
+
+[Track Anything](https://github.com/gaomingqi/Track-Anything) combines SAM with XMem for high-performance object tracking and segmentation in videos
+
+[Langchain](https://github.com/hwchase17/langchain/tree/master) is a framework for developing applications powered by language models
 
 ## Contributor
 
