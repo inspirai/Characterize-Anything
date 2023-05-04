@@ -19,6 +19,9 @@ There are already various [Awesome-Anything](https://github.com/VainF/Awesome-An
 
 > TLDR: Education, Entertainment, Attraction
 
+<details>
+<summary>ChatGPT has a lot to say!</summary>
+<br>
 Well, we ask ChatGPT to help us with the answer (Basically we ask it to write advertisement for the concept).
 
 - ToC: For kids
@@ -38,6 +41,8 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 - ToB
 
 > ChatGPT: Attention! Are you tired of the same old boring sales and marketing pitches? Do you want to revolutionize the way you connect with your customers? Look no further than "characterize anything"! With this unique concept, you can bring your products and services to life in a whole new way. Imagine your customers being able to engage in conversations with your products, asking questions, and getting to know them on a deeper level. Your products will no longer be just inanimate objects, but characters with personalities and stories to share. Plus, this innovative approach to customer engagement is sure to set your business apart from the competition. So why not give "characterize anything" a try and let your customers get to know your products like never before? They'll be hooked in no time!
+
+</details>
 
 ## 2) Demo
 
