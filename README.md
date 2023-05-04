@@ -17,6 +17,8 @@ There are already various [Awesome-Anything](https://github.com/VainF/Awesome-An
 
 **🌟 What are potential applications?**
 
+> TLDR: Education, Entertainment, Attraction
+
 Well, we ask ChatGPT to help us with the answer (Basically we ask it to write advertisement for the concept).
 
 - ToC: For kids
