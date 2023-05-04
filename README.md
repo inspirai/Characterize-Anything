@@ -4,7 +4,7 @@ We plan to create yet another inspirational demo by marrying Segment Anything wi
 
 Hopefully we will continue to polish our idea and make it an amazing product.
 
-## Background
+## 1) Background
 
 There are already various [Awesome-Anything](https://github.com/VainF/Awesome-Anything) projects in the community, and "characterize anything" would like to join the family.
 
@@ -37,13 +37,25 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 > ChatGPT: Attention! Are you tired of the same old boring sales and marketing pitches? Do you want to revolutionize the way you connect with your customers? Look no further than "characterize anything"! With this unique concept, you can bring your products and services to life in a whole new way. Imagine your customers being able to engage in conversations with your products, asking questions, and getting to know them on a deeper level. Your products will no longer be just inanimate objects, but characters with personalities and stories to share. Plus, this innovative approach to customer engagement is sure to set your business apart from the competition. So why not give "characterize anything" a try and let your customers get to know your products like never before? They'll be hooked in no time!
 
-## Demo
+## 2) Demo
 
-## System Architecture
+### 2.1) Hello World Demo
 
-## GPU memory usage
+(TODO: when starting, make everything (big enough in screen) say a greeting to user, in a 顺时针 order)
 
-## Acknowledgement
+### 2.2) Interactive Static Demo
+
+(TODO: human-object chat interaction)
+
+### 2.3) Self-Chat Video Demo
+
+(TODO: 2 objects talking to each other)
+
+## 3) System Architecture
+
+## 4) GPU memory usage
+
+## 5) Acknowledgement
 
 We appreciate the open source of the following preliminary projects:
 
@@ -53,7 +65,7 @@ We appreciate the open source of the following preliminary projects:
 
 [Langchain](https://github.com/hwchase17/langchain/tree/master) is a framework for developing applications powered by language models
 
-## Contributor
+## 6. Contributor
 
 WIP ...
 
