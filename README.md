@@ -94,6 +94,21 @@ We'd like to share some experiences that are more or less related to our project
 
 - [Recipe for building lore-friendly characters](tutorials/recipe_chat_with_lore_friendly_characters.md)
 
+### 5.1) Get Started
+~~~
+# Clone the repository:
+git@github.com:inspirai/Characterize-Anything.git
+cd Characterize-Anything
+
+# Install dependencies: 
+pip install -r requirements.txt
+
+# Run the Characterize-Anything gradio demo.
+python app.py --device cuda:0 --port xx
+# --sam_model_type vit_b # for lower memory usage
+# --checkpoints_dir local_dir # for local checkpoints directory 
+~~~
+
 ## 6) Acknowledgement
 
 We appreciate the open source of the following preliminary projects:
