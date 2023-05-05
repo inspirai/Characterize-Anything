@@ -13,7 +13,7 @@ There are already various [Awesome-Anything](https://github.com/VainF/Awesome-An
 - We've long been fascinated by the idea of AI-driven characters / avatars (both UGC and PGC ones). [Character.ai](https://beta.character.ai/) is one of the best places where you could get an interesting experience.
 - [Segment Anything](https://github.com/facebookresearch/segment-anything) is just amazing. Period.
 - ChatGPT is just amazing. Period.
-- There are awesome preliminary open-source projects that we could base on.
+- There are awesome preliminary open-source projects that we could base on (e.g., [Track-Anything](https://github.com/gaomingqi/Track-Anything)).
 - Inspirai inspires people.
 
 **🌟 What are potential applications?**
@@ -65,7 +65,13 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 ## 4) GPU memory usage
 
-## 5) 📝 TODO
+## 5) 🎓 Tutorials
+
+We'd like to share some experiences that are more or less related to our project.
+
+- [Recipe for chatting with lore-friendly characters](tutorials/recipe_chat_with_lore_friendly_characters.md)
+
+## 6) 📝 TODO
 
 Let's put ourselves on track.
 
@@ -74,12 +80,12 @@ Let's put ourselves on track.
 - [ ] Release a show-case video.
 - [ ] ...
 
-## 6) Acknowledgement
+## 7) Acknowledgement
 
 We appreciate the open source of the following preliminary projects:
 
 [Segment Anything](https://github.com/facebookresearch/segment-anything) is a strong segmentation foundation model that supports diverse prompts.
 
-[Track Anything](https://github.com/gaomingqi/Track-Anything) combines SAM with XMem for high-performance object tracking and segmentation in videos
+[Track Anything](https://github.com/gaomingqi/Track-Anything) combines SAM with XMem for high-performance object tracking and segmentation in videos.
 
-[Langchain](https://github.com/hwchase17/langchain/tree/master) is a framework for developing applications powered by language models
+[Langchain](https://github.com/hwchase17/langchain/tree/master) is a framework for developing applications powered by language models.
