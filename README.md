@@ -1,6 +1,6 @@
 # Characterize Anything
 
-We plan to create yet another inspirational demo by marrying Segment Anything with ChatGPT, where we bring everything we see to life as characters that we can talk to and make friends with.
+We plan to create yet another inspirational demo by marrying Segment Anything with ChatGPT, where we bring everything we see to life as characters that we can talk to and make friends with, namely "Characterize Anything".
 
 Hopefully we will continue to polish our idea and make it an amazing product.
 
@@ -23,8 +23,10 @@ There are already various [Awesome-Anything](https://github.com/VainF/Awesome-An
 <img src="./assets/application_child.png"/>
 </div>
 
+<br>
+
 <details>
-<summary>ChatGPT has a lot to say!</summary>
+<summary>🌟 ChatGPT has a lot to say!</summary>
 <br>
 Well, we ask ChatGPT to help us with the answer (Basically we ask it to write advertisement for the concept).
 
