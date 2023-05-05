@@ -57,7 +57,7 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 ### 2.2) Self-Chat Video Demo
 
-(TODO: 2 objects talking to each other)
+https://user-images.githubusercontent.com/11401434/236398618-18484357-4825-4eaa-8193-895ce22c84ad.mp4
 
 ## 3) System Architecture
 
