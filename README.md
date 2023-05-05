@@ -62,7 +62,22 @@ https://user-images.githubusercontent.com/11401434/236400856-d0a41925-41c4-43ca-
 
 ## 4) GPU memory usage
 
-## 5) Acknowledgement
+## 5) Get Started
+~~~
+# Clone the repository:
+git@github.com:inspirai/Characterize-Anything.git
+cd Characterize-Anything
+
+# Install dependencies: 
+pip install -r requirements.txt
+
+# Run the Characterize-Anything gradio demo.
+python app.py --device cuda:0 --port xx
+# --sam_model_type vit_b # for lower memory usage
+# --checkpoints_dir local_dir # for local checkpoints directory 
+~~~
+
+## 6) Acknowledgement
 
 We appreciate the open source of the following preliminary projects:
 
@@ -72,7 +87,7 @@ We appreciate the open source of the following preliminary projects:
 
 [Langchain](https://github.com/hwchase17/langchain/tree/master) is a framework for developing applications powered by language models
 
-## 6. Contributor
+## 7) Contributor
 
 WIP ...
 
