@@ -69,7 +69,7 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 We'd like to share some experiences that are more or less related to our project.
 
-- [Recipe for chatting with lore-friendly characters](tutorials/recipe_chat_with_lore_friendly_characters.md)
+- [Recipe for building lore-friendly characters](tutorials/recipe_chat_with_lore_friendly_characters.md)
 
 ## 6) 📝 TODO
 
