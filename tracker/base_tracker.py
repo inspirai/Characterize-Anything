@@ -24,7 +24,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 class BaseTracker:
     def __init__(
-        self, xmem_checkpoint, device, sam_model=None, model_type=None
+        self, xmem_checkpoint, device, sam_model=None, model_type=None, font_size=None
     ) -> None:
         """
         device: model device
@@ -45,6 +45,7 @@ class BaseTracker:
             ]
         )
         self.device = device
+        self.font_size = font_size
 
         # changable properties
         self.mapper = MaskMapper()
@@ -117,32 +118,94 @@ class BaseTracker:
                 painted_image, (final_mask == obj).astype("uint8"), mask_color=obj + 1
             )
 
-        painted_image = self.add_text_box(painted_image, bbox, cur_turn_dialogue[1])
+        painted_image = self.add_text_box(
+            painted_image, bbox, frame.shape, cur_turn_dialogue[1]
+        )
         # print(f'max memory allocated: {torch.cuda.max_memory_allocated()/(2**20)} MB')
 
         return final_mask, final_mask, painted_image
 
-    def add_text_box(self, image, bbox, text):
-        font_path = "/cephfs/MH/project/guoyalong_model/Track-Anything/SourceHanSerifSC-Regular.otf"
+    def add_text_box(self, image, bbox, img_border, text):
+        font_path = 'resources/SourceHanSerifSC-Regular.otf'
 
-        def cv2AddChineseText(img, text, position, textColor=(0, 0, 255), textSize=30):
-            if isinstance(img, np.ndarray):  # 判断是否OpenCV图片类型
+        def wrap_text(text, font, max_width):
+            lines = []
+            line = ""
+            for char in text:
+                line += char
+                if font.getsize(line)[0] > max_width:
+                    lines.append(line[:-1])
+                    line = char
+            lines.append(line)
+            return lines
+
+        def fit_text_in_box(
+            img,
+            text,
+            position,
+            textColor=(0, 0, 0),
+            textSize=30,
+            max_width=None,
+            max_height=None,
+        ):
+            if isinstance(img, np.ndarray):  # Check if the image is of OpenCV type
                 img = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-            # 创建一个可以在给定图像上绘图的对象
             draw = ImageDraw.Draw(img)
-            # 字体的格式
+
             fontStyle = ImageFont.truetype(font_path, textSize, encoding="utf-8")
-            # 绘制文本
-            draw.text(position, text, textColor, font=fontStyle)
-            # 转换回OpenCV格式
+            lines = wrap_text(text, fontStyle, max_width)
+
+            while textSize > 1:
+                total_text_height = len(lines) * fontStyle.getsize(lines[0])[1]
+                if total_text_height <= max_height:
+                    break
+                textSize -= 1
+                fontStyle = ImageFont.truetype(font_path, textSize, encoding="utf-8")
+                lines = wrap_text(text, fontStyle, max_width)
+
+            x_start, y_start = position[0], position[1] - (len(lines) + 1) * textSize
+            y_offset = 0
+            for line in lines:
+                draw.text(
+                    (x_start, y_start + y_offset),
+                    line,
+                    textColor,
+                    font=fontStyle,
+                )
+                y_offset += fontStyle.getsize(line)[1]
+
             return cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
 
-        # Draw the bounding box
+        height, width, _ = img_border
         x1, y1, x2, y2 = bbox
-        # Add the text
-        image = cv2AddChineseText(image, text, (x1 + 5, y1 - 5), textSize=30)
+        max_width = width - x1 - 2 * self.font_size
+        max_height = height - y1 - 2 * self.font_size
+
+        image = fit_text_in_box(
+            image,
+            text,
+            (x1 + 5, y1 + 5),
+            textSize=self.font_size,
+            max_width=max_width,
+            max_height=max_height,
+        )
 
         return image
+
+    @staticmethod
+    def get_image_border_pixels(image):
+        height, width, _ = image.shape
+
+        # Top border
+        top_border = image[0, :, :]
+        # Bottom border
+        bottom_border = image[height - 1, :, :]
+        # Left border
+        left_border = image[:, 0, :]
+        # Right border
+        right_border = image[:, width - 1, :]
+
+        return top_border, bottom_border, left_border, right_border
 
     @torch.no_grad()
     def sam_refinement(self, frame, logits, ti):
