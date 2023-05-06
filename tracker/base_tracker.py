@@ -126,7 +126,7 @@ class BaseTracker:
         return final_mask, final_mask, painted_image
 
     def add_text_box(self, image, bbox, img_border, text):
-        font_path = 'resources/SourceHanSerifSC-Regular.otf'
+        font_path = "resources/SourceHanSerifSC-Regular.otf"
 
         def wrap_text(text, font, max_width):
             lines = []
