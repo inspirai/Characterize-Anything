@@ -57,7 +57,15 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 ### 2.2) Self-Chat Video Demo
 
-https://user-images.githubusercontent.com/11401434/236400856-d0a41925-41c4-43ca-82e8-8a203e41887e.mp4
+
+
+https://user-images.githubusercontent.com/11401434/236616851-6934af0a-81cd-42a0-9233-c2e7b070ba9f.mp4
+
+
+
+https://user-images.githubusercontent.com/11401434/236616862-e437ee38-5f63-4ba7-930a-c7b6bf8b3ba4.mp4
+
+
 
 ## 3) System Architecture
 
