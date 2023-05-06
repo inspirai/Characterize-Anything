@@ -1,0 +1,3 @@
+[submodule "MiniGPT-4"]
+	path = MiniGPT-4
+	url = https://github.com/Vision-CAIR/MiniGPT-4.git
