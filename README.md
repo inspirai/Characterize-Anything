@@ -1,3 +1,5 @@
+<div align=center><img src="./assets/logo.png"/></div>
+
 # Characterize Anything
 
 We plan to create yet another inspirational demo by marrying Segment Anything with ChatGPT, where we bring everything we see to life as characters that we can talk to and make friends with, namely "Characterize Anything".
