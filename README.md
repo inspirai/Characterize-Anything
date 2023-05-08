@@ -86,8 +86,10 @@ Let's put ourselves on track.
 
 We appreciate the open source of the following preliminary projects:
 
-[Segment Anything](https://github.com/facebookresearch/segment-anything) is a strong segmentation foundation model that supports diverse prompts.
+- [Segment Anything](https://github.com/facebookresearch/segment-anything) is a strong segmentation foundation model that supports diverse prompts.
 
-[Track Anything](https://github.com/gaomingqi/Track-Anything) combines SAM with XMem for high-performance object tracking and segmentation in videos.
+- [Track Anything](https://github.com/gaomingqi/Track-Anything) combines SAM with XMem for high-performance object tracking and segmentation in videos.
 
-[Langchain](https://github.com/hwchase17/langchain/tree/master) is a framework for developing applications powered by language models.
+- [Langchain](https://github.com/hwchase17/langchain/tree/master) is a framework for developing applications powered by language models.
+
+Also, we used [Midjourney](https://www.midjourney.com) for creating our logo image 🤗 We thank Pixar for their incredible animation movies!
