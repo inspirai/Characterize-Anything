@@ -51,15 +51,11 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 ## 2) Demo
 
-### 2.1) Hello World Demo
-
-(TODO: when starting, make everything (big enough in screen) say a greeting to user, in a 顺时针 order)
-
-### 2.2) Interactive Static Demo
+### 2.1) Interactive Static Demo
 
 (TODO: human-object chat interaction)
 
-### 2.3) Self-Chat Video Demo
+### 2.2) Self-Chat Video Demo
 
 (TODO: 2 objects talking to each other)
 
@@ -73,16 +69,7 @@ We'd like to share some experiences that are more or less related to our project
 
 - [Recipe for building lore-friendly characters](tutorials/recipe_chat_with_lore_friendly_characters.md)
 
-## 6) 📝 TODO
-
-Let's put ourselves on track.
-
-- [x] Release initial code and demo.
-- [ ] Add a demo on Hugging Face Space.
-- [ ] Release a show-case video.
-- [ ] ...
-
-## 7) Acknowledgement
+## 6) Acknowledgement
 
 We appreciate the open source of the following preliminary projects:
 
