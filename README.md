@@ -57,7 +57,15 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 ### 2.2) Self-Chat Video Demo
 
-(TODO: 2 objects talking to each other)
+
+
+https://user-images.githubusercontent.com/11401434/236616851-6934af0a-81cd-42a0-9233-c2e7b070ba9f.mp4
+
+
+
+https://user-images.githubusercontent.com/11401434/236616862-e437ee38-5f63-4ba7-930a-c7b6bf8b3ba4.mp4
+
+
 
 ## 3) System Architecture
 
@@ -93,6 +101,21 @@ The location of dialogue contents are manually set (e.g., texts appear always ab
 We'd like to share some experiences that are more or less related to our project.
 
 - [Recipe for building lore-friendly characters](tutorials/recipe_chat_with_lore_friendly_characters.md)
+
+### 5.1) Get Started
+~~~
+# Clone the repository:
+git@github.com:inspirai/Characterize-Anything.git
+cd Characterize-Anything
+
+# Install dependencies: 
+pip install -r requirements.txt
+
+# Run the Characterize-Anything gradio demo.
+python app.py --device cuda:0 --port xx
+# --sam_model_type vit_b # for lower memory usage
+# --checkpoints_dir local_dir # for local checkpoints directory 
+~~~
 
 ## 6) Acknowledgement
 
