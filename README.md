@@ -117,7 +117,7 @@ python app.py --device cuda:0 --port xx
 
 We'd like to share some experiences that are more or less related to our project.
 
-- [Recipe for building lore-friendly characters](tutorials/recipe_chat_with_lore_friendly_characters.md)
+- [Recipe for building lore-friendly characters](tutorials/recipe_building_lore_friendly_characters.md)
 
 
 ## 6) Acknowledgement
