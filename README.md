@@ -61,6 +61,31 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 ## 3) System Architecture
 
+The self-chat demo pipeline is illustrated as follows:
+
+<div align=center>
+<img src="./assets/framework.png"/>
+</div>
+
+### 3.1) Limitations
+
+We'd like to list some major limitations below:
+
+- Pipeline complexity
+
+Currently, our pipeline is a mixture of multiple projects and models, which already seems complex and less end-to-end.
+
+- Shot changes are not handled
+
+We only support simple scenarios where objects won't change much in a video. In real scenarios however, it's common that there could be multiple shot changes during a video (e.g., an object could disappear), hence shot change detection with image caption regeneration from time to time are probably needed.
+
+- Manual controls are still needed
+
+The duration of each conversation turn is manually set (e.g., how many frames does a dialogue turn takes up) instead of automatically decided
+
+The location of dialogue contents are manually set (e.g., texts appear always above the objects)
+
+
 ## 4) GPU memory usage
 
 ## 5) 🎓 Tutorials
@@ -76,6 +101,8 @@ We appreciate the open source of the following preliminary projects:
 - [Segment Anything](https://github.com/facebookresearch/segment-anything) is a strong segmentation foundation model that supports diverse prompts.
 
 - [Track Anything](https://github.com/gaomingqi/Track-Anything) combines SAM with XMem for high-performance object tracking and segmentation in videos.
+
+- [Caption Anything](https://github.com/ttengwang/Caption-Anything) combines SAM with vision language models in order to caption any object.
 
 - [Langchain](https://github.com/hwchase17/langchain/tree/master) is a framework for developing applications powered by language models.
 
