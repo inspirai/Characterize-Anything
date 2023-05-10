@@ -7,22 +7,7 @@ from inpainter.base_inpainter import BaseInpainter
 import numpy as np
 import argparse
 import re
-
-can_mouse_conversation = """
-Coca-Cola Can: 嗨，你好！我是可乐罐，你是什么东西呢？
-Computer Mouse: 嗨，我是电脑鼠标，你好！
-Coca-Cola Can: 哦，原来是鼠标啊，我还以为是一只小老鼠呢！
-Computer Mouse: 哈哈，我可不是小老鼠。不过，我们倒是有些共同点。
-Coca-Cola Can: 哦？什么共同点？
-Computer Mouse: 我们都是在办公室里工作的必备物品。你是为了让人们解渴，而我是为了让人们更方便地操作电脑。
-Coca-Cola Can: 嗯，听起来很不错。不过，我觉得我更有趣一些，毕竟喝可乐比点鼠标更有乐趣嘛！
-Computer Mouse: 哈哈，也许是吧。但是，你也不能太贪玩了，要是别人把你喝掉了，那就不好了。
-Coca-Cola Can: 哎呀，你别吓唬我啊！我可是有灵魂的！
-Computer Mouse: 哈哈，好了好了，我开玩笑的。不过，你还是要注意安全，毕竟我们都是为了人类服务的。
-Coca-Cola Can: 好的好的，我会注意的。不过，你也要多注意保养啊，不然可就赚不到工资了！
-Computer Mouse: 哈哈，你真逗！好的，我们都要好好干活，为人类的工作生活尽一份力！
-Coca-Cola Can: 没错，干杯！
-"""
+from role_play import generate_self_play_conversation
 
 
 def format_conversation(conversation):
@@ -38,6 +23,14 @@ def format_conversation(conversation):
     return dialogue_list
 
 
+def format_generated_conversation(dialogue):
+    # 使用正则表达式提取说话人和内容
+    pattern = r"\((\d+)\)：(.*?)\n"
+    matches = re.findall(pattern, dialogue)
+    result = [(int(match[0]), match[1]) for match in matches]
+    return result
+
+
 class TrackingAnything:
     def __init__(self, sam_checkpoint, xmem_checkpoint, e2fgvi_checkpoint, args):
         self.args = args
@@ -47,7 +40,9 @@ class TrackingAnything:
         self.samcontroler = SamControler(
             self.sam_checkpoint, args.sam_model_type, args.device
         )
-        self.xmem = BaseTracker(self.xmem_checkpoint, device=args.device)
+        self.xmem = BaseTracker(
+            self.xmem_checkpoint, device=args.device, font_size=args.font_size
+        )
         self.baseinpainter = BaseInpainter(self.e2fgvi_checkpoint, args.device)
 
     # def inference_step(self, first_flag: bool, interact_flag: bool, image: np.ndarray,
@@ -75,12 +70,22 @@ class TrackingAnything:
     #     mask, logit, painted_image = self.samcontroler.interact_loop(image, same_image_flag, points, labels, logits, multimask)
     #     return mask, logit, painted_image
 
-    def generator(self, images: list, template_mask: np.ndarray):
+    def generator(
+        self,
+        images: list,
+        template_mask: np.ndarray,
+        video_description: str,
+        objects_descriptions: list,
+        language: str,
+    ):
         masks = []
         logits = []
         painted_images = []
-
-        formatted_conversation = format_conversation(can_mouse_conversation)
+        objects_descriptions = "\n".join(objects_descriptions)
+        self_play_conversation = generate_self_play_conversation(
+            video_description, objects_descriptions, lan=language
+        )
+        formatted_conversation = format_generated_conversation(self_play_conversation)
         parallel_conversation = self.generate_list(images, formatted_conversation)
         for i in tqdm(range(len(images)), desc="Tracking image"):
             if i == 0:
@@ -121,6 +126,15 @@ def parse_augment():
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--mask_save", default=False)
     parser.add_argument("--checkpoints_dir", default="./checkpoints")
+    parser.add_argument("--font_size", default=30, type=int)
+    parser.add_argument("--cfg-path", required=True, help="path to configuration file.")
+    parser.add_argument(
+        "--options",
+        nargs="+",
+        help="override some settings in the used config, the key-value pair "
+        "in xxx=yyy format will be merged into config file (deprecate), "
+        "change to --cfg-options instead.",
+    )
     args = parser.parse_args()
 
     if args.debug:

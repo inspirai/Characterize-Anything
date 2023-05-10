@@ -1,26 +1,57 @@
-import gradio as gr
 import gdown
 import cv2
-import numpy as np
 import os
 import sys
+from PIL import Image
 
 sys.path.append(sys.path[0] + "/tracker")
 sys.path.append(sys.path[0] + "/tracker/model")
+sys.path.append("MiniGPT-4")
 from track_anything import TrackingAnything
 from track_anything import parse_augment
 import requests
 import json
 import torchvision
-import torch
 from tools.painter import mask_painter
 import psutil
 import time
+from typing import Union
 
 try:
     pass
 except:
     os.system("mim install mmcv")
+import numpy as np
+import torch
+import gradio as gr
+
+from minigpt4.common.config import Config
+from minigpt4.common.registry import registry
+from minigpt4.conversation.conversation import Chat, CONV_VISION
+
+
+# ========================================
+#             Model Initialization
+# ========================================
+
+print("Initializing Chat")
+args = parse_augment()
+cfg = Config(args)
+
+model_config = cfg.model_cfg
+gpu_id = int(args.device.split(":")[-1])
+print(gpu_id)
+model_config.device_8bit = gpu_id
+print(f"args: {args}")
+model_cls = registry.get_model_class(model_config.arch)
+model = model_cls.from_config(model_config).to(args.device)
+
+vis_processor_cfg = cfg.datasets_cfg.cc_sbu_align.vis_processor.train
+vis_processor = registry.get_processor_class(vis_processor_cfg.name).from_config(
+    vis_processor_cfg
+)
+chat = Chat(model, vis_processor, device=args.device)
+print("MiniGPT-4 Initialization Finished!")
 
 
 # download checkpoints
@@ -95,11 +126,15 @@ def get_frames_from_video(video_input, video_state):
             "Normal",
         ),
     ]
+    first_frame = None
     try:
         cap = cv2.VideoCapture(video_path)
         fps = cap.get(cv2.CAP_PROP_FPS)
         while cap.isOpened():
             ret, frame = cap.read()
+            if first_frame is None:
+                first_frame = torch.tensor(frame)
+                first_frame = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
             if ret == True:
                 current_memory_usage = psutil.virtual_memory().percent
                 frames.append(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
@@ -134,14 +169,33 @@ def get_frames_from_video(video_input, video_state):
     video_info = "Video Name: {}, FPS: {}, Total Frames: {}, Image Size:{}".format(
         video_state["video_name"], video_state["fps"], len(frames), image_size
     )
+
+    video_description = ""
+    if first_frame is not None:
+        chat_state = CONV_VISION.copy()
+        img_list = []
+        llm_message = chat.upload_img(first_frame, chat_state, img_list)
+        user_message = "Describe this image."
+        chat.ask(user_message, chat_state)
+        video_description = chat.answer(
+            conv=chat_state,
+            img_list=img_list,
+            num_beams=1,
+            temperature=1,
+            max_new_tokens=300,
+            max_length=2000,
+        )[0]
+
     model.samcontroler.sam_controler.reset_image()
     model.samcontroler.sam_controler.set_image(video_state["origin_images"][0])
     return (
         video_state,
         video_info,
+        video_description,
         video_state["origin_images"][0],
         gr.update(visible=True, maximum=len(frames), value=1),
         gr.update(visible=True, maximum=len(frames), value=len(frames)),
+        gr.update(visible=True),
         gr.update(visible=True),
         gr.update(visible=True),
         gr.update(visible=True),
@@ -298,6 +352,137 @@ def add_multi_mask(video_state, interactive_state, mask_dropdown):
     )
 
 
+def add_mask_object_detection(video_state, interactive_state):
+    seg_mask = video_state["masks"][video_state["select_frame_number"]]
+    mask_save_path = f"result/mask_{time.time()}.png"
+    if not os.path.exists(os.path.dirname(mask_save_path)):
+        os.makedirs(os.path.dirname(mask_save_path))
+    seg_mask_img = Image.fromarray(seg_mask.astype("int") * 255.0)
+    if seg_mask_img.mode != "RGB":
+        seg_mask_img = seg_mask_img.convert("RGB")
+    seg_mask_img.save(mask_save_path)
+    print("seg_mask path: ", mask_save_path)
+    print("seg_mask.shape: ", seg_mask.shape)
+
+    image = video_state["origin_images"][video_state["select_frame_number"]]
+    if seg_mask is None:
+        seg_mask = np.ones(image.size).astype(bool)
+
+    image = load_image(image, return_type="pil")
+    seg_mask = load_image(seg_mask, return_type="pil")
+
+    seg_mask = seg_mask.resize(image.size)
+    seg_mask = np.array(seg_mask) > 0
+
+    box = new_seg_to_box(seg_mask)
+
+    if np.array(box).size == 4:
+        # [x0, y0, x1, y1], where (x0, y0), (x1, y1) represent top-left and bottom-right corners
+        size = max(image.width, image.height)
+        x1, y1, x2, y2 = box
+        image_crop = np.array(image.crop((x1 * size, y1 * size, x2 * size, y2 * size)))
+    elif np.array(box).size == 8:  # four corners of an irregular rectangle
+        image_crop = cut_box(np.array(image), box)
+
+    crop_save_path = f"result/crop_{time.time()}.png"
+    image_crop_image = Image.fromarray(image_crop)
+    image_crop_image.save(crop_save_path)
+    print(f"croped image saved in {crop_save_path}")
+
+    chat_state = CONV_VISION.copy()
+    img_list = []
+    llm_message = chat.upload_img(image_crop_image, chat_state, img_list)
+    user_message = "What’s the object name in this image?"
+    chat.ask(user_message, chat_state)
+    object_description = chat.answer(
+        conv=chat_state,
+        img_list=img_list,
+        num_beams=1,
+        temperature=1,
+        max_new_tokens=300,
+        max_length=2000,
+    )[0]
+
+    interactive_state["masks_object"].append(object_description)
+    return video_state, interactive_state
+
+
+def load_image(image: Union[np.ndarray, Image.Image, str], return_type="numpy"):
+    """
+    Load image from path or PIL.Image or numpy.ndarray to required format.
+    """
+
+    # Check if image is already in return_type
+    if (
+        isinstance(image, Image.Image)
+        and return_type == "pil"
+        or isinstance(image, np.ndarray)
+        and return_type == "numpy"
+    ):
+        return image
+
+    # PIL.Image as intermediate format
+    if isinstance(image, str):
+        image = Image.open(image)
+    elif isinstance(image, np.ndarray):
+        image = Image.fromarray(image)
+
+    if return_type == "pil":
+        return image
+    elif return_type == "numpy":
+        return np.asarray(image)
+    else:
+        raise NotImplementedError()
+
+
+def new_seg_to_box(seg_mask: Union[np.ndarray, Image.Image, str]):
+    if type(seg_mask) == str:
+        seg_mask = Image.open(seg_mask)
+    elif type(seg_mask) == np.ndarray:
+        seg_mask = Image.fromarray(seg_mask)
+    seg_mask = np.array(seg_mask) > 0
+    size = max(seg_mask.shape[0], seg_mask.shape[1])
+    top, bottom = boundary(seg_mask)
+    left, right = boundary(seg_mask.T)
+    return [left / size, top / size, right / size, bottom / size]
+
+
+def boundary(inputs):
+    col = inputs.shape[1]
+    inputs = inputs.reshape(-1)
+    lens = len(inputs)
+
+    start = np.argmax(inputs)
+    end = lens - 1 - np.argmax(np.flip(inputs))
+
+    top = start // col
+    bottom = end // col
+
+    return top, bottom
+
+
+def cut_box(img, rect_points):
+    w, h = get_w_h(rect_points)
+    dst_pts = np.array(
+        [
+            [h, 0],
+            [h, w],
+            [0, w],
+            [0, 0],
+        ],
+        dtype="float32",
+    )
+    transform = cv2.getPerspectiveTransform(rect_points.astype("float32"), dst_pts)
+    cropped_img = cv2.warpPerspective(img, transform, (h, w))
+    return cropped_img
+
+
+def get_w_h(rect_points):
+    w = np.linalg.norm(rect_points[0] - rect_points[1], ord=2).astype("int")
+    h = np.linalg.norm(rect_points[0] - rect_points[3], ord=2).astype("int")
+    return w, h
+
+
 def clear_click(video_state, click_state):
     click_state = [[], []]
     template_frame = video_state["origin_images"][video_state["select_frame_number"]]
@@ -335,7 +520,9 @@ def show_mask(video_state, interactive_state, mask_dropdown):
 
 
 # tracking vos
-def vos_tracking_video(video_state, interactive_state, mask_dropdown):
+def vos_tracking_video(
+    video_state, interactive_state, mask_dropdown, video_description, language="en"
+):
     operation_log = [
         ("", ""),
         (
@@ -374,6 +561,13 @@ def vos_tracking_video(video_state, interactive_state, mask_dropdown):
         template_mask = video_state["masks"][video_state["select_frame_number"]]
     fps = video_state["fps"]
 
+    objects_descriptions = []
+    for i in range(len(mask_dropdown)):
+        mask_number = int(mask_dropdown[i].split("_")[1]) - 1
+        objects_descriptions.append(
+            f"{mask_number}. {interactive_state['masks_object'][mask_number]}"
+        )
+
     # operation error
     if len(np.unique(template_mask)) == 1:
         template_mask[0][0] = 1
@@ -386,7 +580,11 @@ def vos_tracking_video(video_state, interactive_state, mask_dropdown):
         ]
         # return video_output, video_state, interactive_state, operation_error
     masks, logits, painted_images = model.generator(
-        images=following_frames, template_mask=template_mask
+        images=following_frames,
+        template_mask=template_mask,
+        video_description=video_description,
+        objects_descriptions=objects_descriptions,
+        language=language,
     )
     # clear GPU memory
     model.xmem.clear_memory()
@@ -527,7 +725,7 @@ def generate_video_from_frames(frames, output_path, fps=30):
 
 
 # args, defined in track_anything.py
-args = parse_augment()
+# args = parse_augment()
 
 # check and download checkpoints if needed
 SAM_checkpoint_dict = {
@@ -565,8 +763,7 @@ e2fgvi_checkpoint = download_checkpoint_from_google_drive(
 # initialize sam, xmem, e2fgvi models
 model = TrackingAnything(SAM_checkpoint, xmem_checkpoint, e2fgvi_checkpoint, args)
 
-title = """<p><h1 align="center">Characterize-Anything</h1></p>
-    """
+title = """<p><h1 align="center">Characterize-Anything</h1></p>"""
 
 with gr.Blocks() as iface:
     """
@@ -582,6 +779,7 @@ with gr.Blocks() as iface:
             "multi_mask": {"mask_names": [], "masks": []},
             "track_end_number": None,
             "resize_ratio": 1,
+            "masks_object": [],
         }
     )
 
@@ -606,6 +804,7 @@ with gr.Blocks() as iface:
                 video_input = gr.Video(autosize=True)
                 with gr.Column():
                     video_info = gr.Textbox(label="Video Info")
+                    video_description = gr.Textbox(label="Video Description")
                     resize_info = gr.Textbox(
                         value="If you want to use the inpaint function, it is best to git clone the repo and use a machine with more VRAM locally. \
                                             Alternatively, you can use the resize ratio slider to scale down the original image to around 360P resolution for faster processing.",
@@ -680,6 +879,12 @@ with gr.Blocks() as iface:
                         ],
                         visible=False,
                     )
+                    lang_dropdown = gr.Dropdown(
+                        choices=["English", "Chinese"],
+                        value="English",
+                        label="Language",
+                        visible=False,
+                    )
                     mask_dropdown = gr.Dropdown(
                         multiselect=True,
                         value=[],
@@ -705,6 +910,7 @@ with gr.Blocks() as iface:
         outputs=[
             video_state,
             video_info,
+            video_description,
             template_frame,
             image_selection_slider,
             track_pause_number_slider,
@@ -714,6 +920,7 @@ with gr.Blocks() as iface:
             template_frame,
             tracking_video_predict_button,
             video_output,
+            lang_dropdown,
             mask_dropdown,
             remove_mask_button,
             inpaint_video_predict_button,
@@ -759,6 +966,10 @@ with gr.Blocks() as iface:
             click_state,
             run_status,
         ],
+    ).then(
+        fn=add_mask_object_detection,
+        inputs=[video_state, interactive_state],
+        outputs=[video_state, interactive_state],
     )
 
     remove_mask_button.click(
@@ -770,7 +981,13 @@ with gr.Blocks() as iface:
     # tracking video from select image and mask
     tracking_video_predict_button.click(
         fn=vos_tracking_video,
-        inputs=[video_state, interactive_state, mask_dropdown],
+        inputs=[
+            video_state,
+            interactive_state,
+            mask_dropdown,
+            video_description,
+            lang_dropdown,
+        ],
         outputs=[video_output, video_state, interactive_state, run_status],
     )
 
