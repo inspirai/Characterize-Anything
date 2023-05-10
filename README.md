@@ -98,10 +98,6 @@ The location of dialogue contents are manually set (e.g., texts appear always ab
 
 ## 5) 🎓 Tutorials
 
-We'd like to share some experiences that are more or less related to our project.
-
-- [Recipe for building lore-friendly characters](tutorials/recipe_chat_with_lore_friendly_characters.md)
-
 ### 5.1) Get Started
 ~~~
 # Clone the repository:
@@ -116,6 +112,13 @@ python app.py --device cuda:0 --port xx
 # --sam_model_type vit_b # for lower memory usage
 # --checkpoints_dir local_dir # for local checkpoints directory 
 ~~~
+
+### 5.2) Recipes
+
+We'd like to share some experiences that are more or less related to our project.
+
+- [Recipe for building lore-friendly characters](tutorials/recipe_chat_with_lore_friendly_characters.md)
+
 
 ## 6) Acknowledgement
 
