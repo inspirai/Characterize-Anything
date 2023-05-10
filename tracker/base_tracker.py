@@ -119,21 +119,25 @@ class BaseTracker:
             )
 
         painted_image = self.add_text_box(
-            painted_image, bbox, frame.shape, cur_turn_dialogue[1]
+            painted_image,
+            bbox,
+            frame.shape,
+            cur_turn_dialogue[1],
+            fix_text_box=(3 * self.font_size, 10 * self.font_size),
         )
         # print(f'max memory allocated: {torch.cuda.max_memory_allocated()/(2**20)} MB')
 
         return final_mask, final_mask, painted_image
 
-    def add_text_box(self, image, bbox, img_border, text):
+    def add_text_box(self, image, bbox, img_border, text, fix_text_box):
         font_path = "resources/SourceHanSerifSC-Regular.otf"
 
-        def wrap_text(text, font, max_width):
+        def wrap_text(text, font, fix_text_box):
             lines = []
             line = ""
             for char in text:
                 line += char
-                if font.getsize(line)[0] > max_width:
+                if font.getsize(line)[0] > fix_text_box[1]:
                     lines.append(line[:-1])
                     line = char
             lines.append(line)
@@ -145,25 +149,36 @@ class BaseTracker:
             position,
             textColor=(0, 0, 0),
             textSize=30,
-            max_width=None,
-            max_height=None,
+            fix_text_box=None,
+            img_border=None,
         ):
             if isinstance(img, np.ndarray):  # Check if the image is of OpenCV type
                 img = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
             draw = ImageDraw.Draw(img)
 
             fontStyle = ImageFont.truetype(font_path, textSize, encoding="utf-8")
-            lines = wrap_text(text, fontStyle, max_width)
+            lines = wrap_text(text, fontStyle, fix_text_box)
 
             while textSize > 1:
                 total_text_height = len(lines) * fontStyle.getsize(lines[0])[1]
-                if total_text_height <= max_height:
+                if total_text_height <= fix_text_box[0]:
                     break
                 textSize -= 1
                 fontStyle = ImageFont.truetype(font_path, textSize, encoding="utf-8")
-                lines = wrap_text(text, fontStyle, max_width)
+                lines = wrap_text(text, fontStyle, fix_text_box)
 
             x_start, y_start = position[0], position[1] - (len(lines) + 1) * textSize
+
+            if x_start < 0:
+                x_start = 5
+            elif x_start + fix_text_box[1] > img_border[1]:
+                x_start = img_border[1] - fix_text_box[1]
+
+            if y_start < 0:
+                y_start = 5
+            elif y_start + fix_text_box[0] > img_border[0]:
+                y_start = img_border[0] - fix_text_box[0]
+
             y_offset = 0
             for line in lines:
                 draw.text(
@@ -178,16 +193,14 @@ class BaseTracker:
 
         height, width, _ = img_border
         x1, y1, x2, y2 = bbox
-        max_width = width - x1 - 2 * self.font_size
-        max_height = height - y1 - 2 * self.font_size
 
         image = fit_text_in_box(
             image,
             text,
-            (x1 + 5, y1 + 5),
+            (x1, y1),
             textSize=self.font_size,
-            max_width=max_width,
-            max_height=max_height,
+            fix_text_box=fix_text_box,
+            img_border=img_border,
         )
 
         return image
