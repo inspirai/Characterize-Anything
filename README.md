@@ -13,20 +13,14 @@ There are already various [Awesome-Anything](https://github.com/VainF/Awesome-An
 **💡 How does this idea come out?**
 
 - We've long been fascinated by the idea of AI-driven characters / avatars (both UGC and PGC ones). [Character.ai](https://beta.character.ai/) is one of the best places where you could get an interesting experience.
-- [Segment Anything](https://github.com/facebookresearch/segment-anything) is just amazing. Period.
-- ChatGPT is just amazing. Period.
+- Foundation vision  models (e.g., [Segment Anything](https://github.com/facebookresearch/segment-anything)) are amazing
+- Foundation language models (e.g., ChatGPT) are amazing.
 - There are awesome preliminary open-source projects that we could base on (e.g., [Track-Anything](https://github.com/gaomingqi/Track-Anything)).
 - Inspirai inspires people.
 
 **🌟 What are potential applications?**
 
 > TLDR: Education, Entertainment, Attraction
-
-<div align=center>
-<img src="./assets/application_child.png"/>
-</div>
-
-<br>
 
 <details>
 <summary>🌟 ChatGPT has a lot to say!</summary>
@@ -136,4 +130,4 @@ We appreciate the open source of the following preliminary projects:
 
 - [Langchain](https://github.com/hwchase17/langchain/tree/master) is a framework for developing applications powered by language models.
 
-Also, we used [Midjourney](https://www.midjourney.com) for creating our logo image 🤗 We thank Pixar for their incredible animation movies!
+Also, we used [Midjourney](https://www.midjourney.com) for creating our Pixar-style logo image 🤗 We thank Pixar for their incredible animation movies!
