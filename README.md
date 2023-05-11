@@ -47,9 +47,9 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 ### 2.1) Interactive Static Demo
 
-| object                                | English                                           | Chinese                                           |
-|---------------------------------------|---------------------------------------------------|---------------------------------------------------|
-| <img src="./assets/can_segment.png"/> | <img src="./assets/can_interactive_chat_en.png"/> | <img src="./assets/can_interactive_chat_zh.png"/> |
+| English                                           | Chinese                                           |
+|---------------------------------------------------|---------------------------------------------------|
+| <img src="./assets/can_interactive_chat_en.png"/> | <img src="./assets/can_interactive_chat_zh.png"/> |
 
 ### 2.2) Self-Chat Video Demo
 
