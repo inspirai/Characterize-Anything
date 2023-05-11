@@ -104,8 +104,13 @@ pip install -r requirements.txt
 
 # Run the Characterize-Anything gradio demo.
 python app.py --device cuda:0 --port xx
-# --sam_model_type vit_b # for lower memory usage
-# --checkpoints_dir local_dir # for local checkpoints directory 
+# --sam_model_type vit_b 
+    # for lower memory usage
+# --checkpoints_dir local_dir 
+    # for local checkpoints directory which contains the following ckpts:
+        # - sam_vit_h_4b8939.pth (https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth)
+        # - XMem-s012.pth (https://github.com/hkchengrex/XMem/releases/download/v1.0/XMem-s012.pth)
+        # - E2FGVI-HQ-CVPR22.pth (https://drive.google.com/uc?id=10wGdKSUOie0XmCr8SQ2A2FeDe-mfn5w3)
 ~~~
 
 ### 5.2) Recipes
