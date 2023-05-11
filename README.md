@@ -57,14 +57,9 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 ### 2.2) Self-Chat Video Demo
 
-
-
-https://user-images.githubusercontent.com/11401434/236616851-6934af0a-81cd-42a0-9233-c2e7b070ba9f.mp4
-
-
-
-https://user-images.githubusercontent.com/11401434/236616862-e437ee38-5f63-4ba7-930a-c7b6bf8b3ba4.mp4
-
+| English Demo                                                                                                        | Chinese Demo                                                                                                        |
+|---------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| <video src="https://user-images.githubusercontent.com/11401434/236616851-6934af0a-81cd-42a0-9233-c2e7b070ba9f.mp4"> | <video src="https://user-images.githubusercontent.com/11401434/236616862-e437ee38-5f63-4ba7-930a-c7b6bf8b3ba4.mp4"> |
 
 
 ## 3) System Architecture
@@ -117,7 +112,7 @@ python app.py --device cuda:0 --port xx
 
 We'd like to share some experiences that are more or less related to our project.
 
-- [Recipe for building lore-friendly characters](tutorials/recipe_building_lore_friendly_characters.md)
+- [Recipe for building lore-friendly characters using ChatGPT](tutorials/recipe_building_lore_friendly_characters.md)
 
 
 ## 6) Acknowledgement
