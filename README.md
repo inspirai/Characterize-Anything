@@ -53,7 +53,9 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 ### 2.1) Interactive Static Demo
 
-(TODO: human-object chat interaction)
+| object                                | English                                           | Chinese                                           |
+|---------------------------------------|---------------------------------------------------|---------------------------------------------------|
+| <img src="./assets/can_segment.png"/> | <img src="./assets/can_interactive_chat_en.png"/> | <img src="./assets/can_interactive_chat_zh.png"/> |
 
 ### 2.2) Self-Chat Video Demo
 
@@ -100,10 +102,12 @@ git@github.com:inspirai/Characterize-Anything.git
 cd Characterize-Anything
 
 # Install dependencies: 
-pip install -r requirements.txt
+conda env create -f environment.yml
 
 # Run the Characterize-Anything gradio demo.
-python app.py --device cuda:0 --port xx
+python characterize_anything_app.py --device cuda:0 --port xx  # (video: self chat mode)
+python characterize_anything_image_app.py --device cuda:0 --port xx  # (image: interactive chat mode)
+
 # --sam_model_type vit_b 
     # for lower memory usage
 # --checkpoints_dir local_dir 
