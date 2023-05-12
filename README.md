@@ -2,9 +2,11 @@
 
 # Characterize Anything
 
-We plan to create yet another inspirational demo by marrying Segment Anything with ChatGPT, where we bring everything we see to life as characters that we can talk to and make friends with, namely "Characterize Anything".
+Imagine a world where every object around you springs to life. Meet your favorite mug of coffee, chat with your laptop, befriend your sofa.🤩
 
-Hopefully we will continue to polish our idea and make it an amazing product.
+Here we create yet another *inspirational* demo by fusing [Segment Anything](https://segment-anything.com/) and ChatGPT to bring every inanimate object to life, namely **Characterize Anything**.
+
+(This project is still under active development to make it into an amazing product.💪)
 
 ## 1) Background
 
@@ -20,7 +22,7 @@ There are already various [Awesome-Anything](https://github.com/VainF/Awesome-An
 
 **🌟 What are potential applications?**
 
-> TLDR: Education, Entertainment, Attraction
+> TLDR: **Education**, **Entertainment**, **Attraction**
 
 <details>
 <summary>🌟 ChatGPT has a lot to say!</summary>
@@ -76,26 +78,26 @@ We'd like to list some major limitations below:
 
 - Pipeline complexity
 
-Currently, our pipeline is a mixture of multiple projects and models, which already seems complex and less end-to-end.
+  Currently, our pipeline is a mixture of multiple projects and models, which already seems complex and less end-to-end.
 
 - Shot changes are not handled
 
-We only support simple scenarios where objects won't change much in a video. In real scenarios however, it's common that there could be multiple shot changes during a video (e.g., an object could disappear), hence shot change detection with image caption regeneration from time to time are probably needed.
+  We only support simple scenarios where objects won't change much in a video. In real scenarios however, it's common that there could be multiple shot changes during a video (e.g., an object could disappear), hence shot change detection with image caption regeneration from time to time are probably needed.
 
 - Manual controls are still needed
 
-The duration of each conversation turn is manually set (e.g., how many frames does a dialogue turn takes up) instead of automatically decided
+  The duration of each conversation turn is manually set (e.g., how many frames does a dialogue turn takes up) instead of automatically decided
 
-The location of dialogue contents are manually set (e.g., texts appear always above the objects)
+  The location of dialogue contents are manually set (e.g., texts appear always above the objects)
 
 ## 4) GPU memory usage
 
 ## 5) 🎓 Tutorials
 
 ### 5.1) Get Started
-~~~
-# Clone the repository:
-git@github.com:inspirai/Characterize-Anything.git
+    
+```bash
+git clone git@github.com:inspirai/Characterize-Anything.git
 cd Characterize-Anything
 
 # Install dependencies: 
@@ -112,7 +114,7 @@ python characterize_anything_image_app.py --device cuda:0 --port xx  # (image: i
         # - sam_vit_h_4b8939.pth (https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth)
         # - XMem-s012.pth (https://github.com/hkchengrex/XMem/releases/download/v1.0/XMem-s012.pth)
         # - E2FGVI-HQ-CVPR22.pth (https://drive.google.com/uc?id=10wGdKSUOie0XmCr8SQ2A2FeDe-mfn5w3)
-~~~
+```
 
 ### 5.2) Recipes
 
