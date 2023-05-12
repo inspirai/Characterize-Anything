@@ -47,15 +47,19 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 ### 2.1) Interactive Static Demo
 
-| object                                | English                                           | Chinese                                           |
-|---------------------------------------|---------------------------------------------------|---------------------------------------------------|
-| <img src="./assets/can_segment.png"/> | <img src="./assets/can_interactive_chat_en.png"/> | <img src="./assets/can_interactive_chat_zh.png"/> |
+| English                                           | Chinese                                           |
+|---------------------------------------------------|---------------------------------------------------|
+| <img src="./assets/can_interactive_chat_en.png"/> | <img src="./assets/can_interactive_chat_zh.png"/> |
 
 ### 2.2) Self-Chat Video Demo
 
 | English Demo                                                                                                        | Chinese Demo                                                                                                        |
 |---------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
-| <video src="https://user-images.githubusercontent.com/11401434/236616851-6934af0a-81cd-42a0-9233-c2e7b070ba9f.mp4"> | <video src="https://user-images.githubusercontent.com/11401434/236616862-e437ee38-5f63-4ba7-930a-c7b6bf8b3ba4.mp4"> |
+| <video src="https://github.com/inspirai/Characterize-Anything/assets/11401434/f75a2de8-31cb-40c5-8f7a-94ad5e998d9f"> | <video src="https://github.com/inspirai/Characterize-Anything/assets/11401434/dcf575cd-697c-43fe-a241-46b7a69ca803"> |
+
+
+
+
 
 
 ## 3) System Architecture
@@ -83,7 +87,6 @@ We only support simple scenarios where objects won't change much in a video. In 
 The duration of each conversation turn is manually set (e.g., how many frames does a dialogue turn takes up) instead of automatically decided
 
 The location of dialogue contents are manually set (e.g., texts appear always above the objects)
-
 
 ## 4) GPU memory usage
 
