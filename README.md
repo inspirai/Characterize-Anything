@@ -55,7 +55,11 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 | English Demo                                                                                                        | Chinese Demo                                                                                                        |
 |---------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
-| <video src="https://user-images.githubusercontent.com/11401434/236616851-6934af0a-81cd-42a0-9233-c2e7b070ba9f.mp4"> | <video src="https://github.com/inspirai/Characterize-Anything/assets/11401434/dcf575cd-697c-43fe-a241-46b7a69ca803"> |
+| <video src="https://github.com/inspirai/Characterize-Anything/assets/11401434/f75a2de8-31cb-40c5-8f7a-94ad5e998d9f"> | <video src="https://github.com/inspirai/Characterize-Anything/assets/11401434/dcf575cd-697c-43fe-a241-46b7a69ca803"> |
+
+
+
+
 
 
 ## 3) System Architecture
