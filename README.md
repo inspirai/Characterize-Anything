@@ -90,11 +90,9 @@ We'd like to list some major limitations below:
 
   The location of dialogue contents are manually set (e.g., texts appear always above the objects)
 
-## 4) GPU memory usage
+## 4) 🎓 Tutorials
 
-## 5) 🎓 Tutorials
-
-### 5.1) Get Started
+### 4.1) Get Started
     
 ```bash
 git clone git@github.com:inspirai/Characterize-Anything.git
@@ -116,14 +114,14 @@ python characterize_anything_image_app.py --device cuda:0 --port xx  # (image: i
         # - E2FGVI-HQ-CVPR22.pth (https://drive.google.com/uc?id=10wGdKSUOie0XmCr8SQ2A2FeDe-mfn5w3)
 ```
 
-### 5.2) Recipes
+### 4.2) Recipes
 
 We'd like to share some experiences that are more or less related to our project.
 
 - [Recipe for building lore-friendly characters using ChatGPT](tutorials/recipe_building_lore_friendly_characters.md)
 
 
-## 6) Acknowledgement
+## 5) Acknowledgement
 
 We appreciate the open source of the following preliminary projects:
 
