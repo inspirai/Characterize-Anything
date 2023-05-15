@@ -152,6 +152,4 @@ We appreciate the open source of the following preliminary projects:
 
 - [Caption Anything](https://github.com/ttengwang/Caption-Anything) combines SAM with vision language models in order to caption any object.
 
-- [Langchain](https://github.com/hwchase17/langchain/tree/master) is a framework for developing applications powered by language models.
-
 Also, we used [Midjourney](https://www.midjourney.com) for creating our Pixar-style logo image 🤗 We thank Pixar for their incredible animation movies!
