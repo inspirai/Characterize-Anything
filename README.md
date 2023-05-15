@@ -17,11 +17,13 @@ There are already various [Awesome-Anything](https://github.com/VainF/Awesome-An
 > TLDR: A wondrous chemical reaction between vision language models and AI Characters
 
 <details><summary> We'd like to inspire </summary>
+
 - We've long been fascinated by the idea of AI-driven characters / avatars (both UGC and PGC ones). [Character.ai](https://beta.character.ai/) is one of the best places where you could get an interesting experience.
 - Foundation vision  models (e.g., [Segment Anything](https://github.com/facebookresearch/segment-anything)) are amazing
 - Foundation language models (e.g., ChatGPT) are amazing.
 - There are awesome preliminary open-source projects that we could base on (e.g., [Track-Anything](https://github.com/gaomingqi/Track-Anything)).
 - Inspirai inspires people.
+
 </details>
 
 **🌟 What are potential applications?**
