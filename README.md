@@ -86,7 +86,7 @@ The self-chat demo pipeline is illustrated as follows:
 <img src="./assets/framework.png"/>
 </div>
 
-Basically, the self-chat video pipeline is consisted of steps:
+Basically, the self-chat video pipeline is consisted of the following steps:
 
 - Input: A video containing desired objects
 - Visual Control: User clicks on objects that participate in character conversation 
