@@ -2,9 +2,9 @@
 
 # Characterize Anything
 
-Imagine a world where every object around you springs to life. Meet your favorite mug of coffee, chat with your laptop, befriend your sofa.🤩
+Imagine a world where every object around you springs to life. Meet your favorite mug of coffee, chat with your fridge, befriend your sofa.🤩
 
-Here we create yet another *inspirational* demo by fusing [Segment Anything](https://segment-anything.com/) and ChatGPT to bring every inanimate object to life, namely **Characterize Anything**.
+***Characterize Anything*** is an inspirational interactive tool for characterizing any inanimate object in a video/image so that users could talk with. It combines the power of SOTA video object tracking and large vision language models in order to bring any object to life.
 
 (This project is still under active development to make it into an amazing product.💪)
 
@@ -46,6 +46,17 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 </details>
 
 ## 2) Demo
+
+We currently offer two types of demos: 
+
+1. **Interactive Static Demo**
+   
+   - You can input an image and select the object you want to converse with. Once you've made your selection, you can start the conversation.
+   - If you wish to converse with another object, simply click on it and the conversation will restart.
+
+2. **Self-Chat Video Demo**
+
+   - You can input a video and select at least two objects that you would like to bring to life. ChatGPT will then imagine conversation between the selected objects in a creative way.
 
 ### 2.1) Interactive Static Demo
 
