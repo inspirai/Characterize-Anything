@@ -1,25 +1,23 @@
 ## Recipe for ChatGPT-driven Characters
 
-Although there are already numerous ideas and applications centered around "chatting with ChatGPT-driven characters", we would still like to express our thoughts and practical details on creating a character that is true to its lore and making the conversational experience more authentic.
+Even though there are already numerous ideas and applications for "chatting with ChatGPT-driven characters", we still want to share our thoughts and practical details on how to create a character that stays true to its lore, and on how to make the conversational experience more authentic.
 
-Readers are expected to already know about what we basically do with ChatGPT for custom application: **prompt engineering**.
+We assume that readers are already familiar with the primary use of ChatGPT for custom applications, which is "prompt engineering".
 
-In general, we'd like to propose 3 tips (for a better prompt):
+In general, we propose three tips for improving prompts:
 
-- **External Knowledge**: A lore-friendly AI character
-- **Memory**: This is what a true friend needs
-- **Anti-Hack**: Please stop saying you are an AI language model during roleplay...
+- **External Knowledge**: To make an AI character in keeping with its lore
+- **Memory**: A true friend should remember things
+- **Anti-Hack**: Please don't ruin roleplaying by constantly reminding others that you're an AI language model.
 
 ### 1. External Knowledge
 
-Firstly, incorporating external knowledge can enhance the quality of the prompt.
+To begin with, the incorporation of external knowledge can significantly improve the quality of the prompt. A suitable example of this is the famous "emergency food" meme of Paimon in Genshin Impact.
 
-Let's take Paimon's "emergency food" meme in Genshin Impact for example.
+It is evident that a pure language model is incapable of creating an AI Paimon character due to several limitations. Firstly, ChatGPT is not entirely familiar with Paimon, and with Genshin Impact's fast-evolving versions and new content releases, its pretraining corpus is considered outdated. Furthermore, .
 
-A pure LLM is limited at creating an AI Paimon character:
-
-- **Outdated**: ChatGPT is not that familiar with Paimon, along with the Genshin Impact's fast-updating versions and new contents (e.g., the pretraining corpus is outdated)
-- **Hallucination**: Even if ChatGPT is fully trained on Genshin Impact's corpus, it still makes up things that are not true to the lore (a.k.a., hallucination of LLMs)
+- **Outdated**: ChatGPT is not that familiar with Paimon (e.g., the pretraining corpus is easily outdated due to Genshin Impact's fast-evolving versions and new content releases)
+- **Hallucination**: Even if ChatGPT is thoroughly trained on Genshin Impact's corpus, it might still end up making up things that are not true to the lore, which are referred to as hallucinations of language models
 
 Case Study:
 
@@ -38,32 +36,32 @@ Case Study:
 
 **Note**:
 
-- From the above 2 examples, we can see how ChatGPT has a better knowledge in English than in Chinese, which is probably due to the insufficient amount of Genshin Impact's Chinese training corpus
+- The two examples above also demonstrate that ChatGPT has better Genshin Impact knowledge in English than in Chinese, likely because there is not enough training data for Genshin Impact in Chinese.
 
-Hence, we consider it a must to be able to acquire external knowledge during the whole chat session. Thanks to the amazing grounding ability of LLMs, current LLMs (e.g., ChatGPT) are not bad at utilizing correct knowledge provided in prompts.
+Therefore, it is important for ChatGPT to be able to gather external knowledge during a chat session. Fortunately, LLMs have an impressive ability to draw upon correct knowledge from prompts, and ChatGPT is proficient in doing so.
 
 #### 1.1 Knowledge Resources
 
-More precisely, we suggest taking the following knowledge sources into consideration for our scenario:
+For our scenario, we recommend considering the following sources of knowledge:
 
-- **World Knowledge**: Descriptions and settings of the world where the character lives in, as well as specific entities. 
-- **Character Profile**: The character's persona, stories, relations with others, etc.
-- **Character Dialogue Lines**: These lines are mainly used as few-shot examples, representing the character's speaking styles and reactions in certain cases.
-- **Community Knowledge**: Memes, gameplay or UGC contents that only fans know well. (Imagine how Klee is expected to respond when asked about "let the wind tell you")
+- **World Knowledge**: This includes descriptions and settings of the world where the character resides, as well as specific entities that exist within it.
+- **Character Profile**: Understanding the character's persona, backstory, relationships with other characters, and other relevant information.
+- **Dialogue Lines**: These serve as useful few-shot examples, demonstrating the character's speech patterns and reactions in specific situations.
+- **Community Knowledge**: Knowledge of memes, gameplay mechanics, or user-generated content that is familiar only to fans. 
 
 #### 1.2 Knowledge Retrieval Tools
 
-Generally, a search engine is largely sufficient for our needs. But one could surely think of constructing a fine-grained retrieval corpus.
+In general, a search engine meets the needs of most people. However, there are instances where a more detailed search corpus would be beneficial. 
 
-We recommend checking out [Langchain Tool](https://python.langchain.com/en/latest/modules/agents/tools.html) 's multiple search components that are fast to implement.
+We suggest exploring the various search components available through the [Langchain Tool](https://python.langchain.com/en/latest/modules/agents/tools.html). These components are efficient to implement and offer fine-grained retrieval options.
 
 ### 2. Memory
 
-Secondly, developing and implementing (long-term) memory capabilities can help create a more natural flow (e.g., better consistency among sessions) as well as a closer bond between the user and AI, leading to a deeper user engagement.
+Another important aspect is the development and implementation of long-term memory capabilities. This can lead to a more natural flow and better consistency among sessions, ultimately creating a closer bond between the user and AI. This in turn can result in deeper user engagement.
 
-In another point of view, the memory could also be regarded as a source of personalized knowledge, which needs to be retrieved when necessary.
+Memory can be considered a source of personalized knowledge that can be retrieved when needed.
 
-There is [Langchain Memory](https://python.langchain.com/en/latest/modules/memory/) functionality to help us build our own memory module.
+There is [Langchain Memory](https://python.langchain.com/en/latest/modules/memory/) functionality can aid in building a customized memory module.
 
 ### 3 Anti-hack
 
@@ -75,11 +73,16 @@ Here we propose some prompting tips, namely:
 - Use 3rd-person format
 - [Negative-guidance](https://book.character.ai/character-book/advanced-creation/negative-guidance) trick from character.ai
 
-#### 3.1 Use few-shot examples
+#### 3.1 Utilize few-shot examples
 
-This is quite straight-forward. You just provide some examples/demonstrations at first to tell your LLM how to respond when user asks the similar questions.
+A set of examples or demonstrations could be used to guide the LLM on how to respond to similar user queries.
 
-These demonstrations might be either fixed at the beginning, or retrieved every time the user sends a new query.
+This can be carried out in two ways:
+
+- Providing a fixed set of demonstrations at the onset
+- Retrieving relevant demonstrations for each new user inquiry.
+
+Ensure to incorporate this approach to enhance the performance of your AI character.
 
 #### 3.2 Use 3rd-person format
 
@@ -87,7 +90,7 @@ We recommend using 3rd-person format (e.g., "System: Character is ...\nUser: ...
 
 The intuition is as follows:
 
-A) The 3rd-person format results in a better boundary for LLM to separate the character to be played and itself (AI language model)
+A) The 3rd-person format has clearer separation between the character being played and the language model itself, making it easier for the model to understand the intent behind the user's dialogue.
 
 B) User queries would be treated as if user is speaking to the character, instead of speaking directly to the assistant itself
 
