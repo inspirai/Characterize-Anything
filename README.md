@@ -97,21 +97,19 @@ The self-chat video pipeline comprises several steps including:
 
 ### 3.1) Limitations
 
-We'd like to list some major limitations below:
+Below are some major limitations that we would like to highlight:
 
 - Pipeline complexity
 
-  Currently, our pipeline is a mixture of multiple projects and models, which already seems complex and less end-to-end.
+  Our current pipeline comprises multiple projects and models, and is already quite complex. It may not be entirely end-to-end.
 
-- Shot changes are not handled
+- Absence of shot change handling
 
-  We only support simple scenarios where objects won't change much in a video. In real scenarios however, it's common that there could be multiple shot changes during a video (e.g., an object could disappear), hence shot change detection with image caption regeneration from time to time are probably needed.
+  Our system only supports simple scenarios where objects remain largely unchanged in a video. However, it is quite common in real-life scenarios to have multiple shot changes in a video. In such cases, shot change detection and image caption regeneration may be required.
 
-- Manual controls are still needed
+- Need for manual controls
 
-  The duration of each conversation turn is manually set (e.g., how many frames does a dialogue turn takes up) instead of automatically decided
-
-  The location of dialogue contents are manually set (e.g., texts appear always above the objects)
+  At present, certain aspects of the system still require manual controls. For example, the duration of each conversation turn is manually set (i.e., based on the number of frames involved), rather than being automatically determined. Additionally, the location of dialogue contents (e.g., text appearing above objects) is manually set.
 
 ## 4) 🎓 Tutorials
 
