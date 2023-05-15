@@ -4,7 +4,7 @@
 
 Imagine a world where every object around you springs to life. Meet your favorite mug of coffee, chat with your fridge, befriend your sofa.🤩
 
-***Characterize Anything*** is an inspirational interactive tool for characterizing any inanimate object in a video/image so that users could talk with. It combines the power of SOTA video object tracking & segmentation, and large vision language models in order to bring any object to life. Besides, one could specify which object(s) to talk to via simple mouse clicks on a given image or video.
+***Characterize Anything*** is an interactive tool that can bring any inanimate object in a video or image to life. This is made possible through the combined use of advanced video object tracking and segmentation technologies as well as large vision language models. With this tool, users can easily specify which object(s) they want to talk to by simple mouse clicks. Overall, Characterize Anything is an exciting and inspirational tool that offers endless possibilities for enhancing human-object interactions.
 
 (This project is still under active development to make it into an amazing product.💪)
 
@@ -86,14 +86,14 @@ The self-chat demo pipeline is illustrated as follows:
 <img src="./assets/framework.png"/>
 </div>
 
-Basically, the self-chat video pipeline is consisted of the following steps:
+The self-chat video pipeline comprises several steps including: 
 
-- Input: A video containing desired objects
-- Visual Control: User clicks on objects that participate in character conversation 
-- Caption Anything: Perform different level of image captions for the 1st frame
-- ChatGPT: Generate a creative conversation between characters based on captions
-- Track Anything: Perform video tracking & segmentation based on SAM and XMem models
-- Output: The original video but with dialogue lines added and stick to objects
+- Input: A video that contains the desired objects.
+- Visual Control: Users clicking on objects that will participate in character conversations.
+- Caption Anything: Generating different levels of image captions for the first video frame.
+- ChatGPT: Generating a creative conversation between characters based on the generated captions.
+- Track Anything: Conducting video tracking and segmentation based on the SAM and XMem models.
+- Output: The original video, but with dialogue lines added and attached to the relevant objects.
 
 ### 3.1) Limitations
 
