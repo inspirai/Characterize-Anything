@@ -131,8 +131,6 @@ if __name__ == "__main__":
     images = []
     image = np.array(PIL.Image.open("/hhd3/gaoshang/truck.jpg"))
     args = parse_augment()
-    # images.append(np.ones((20,20,3)).astype('uint8'))
-    # images.append(np.ones((20,20,3)).astype('uint8'))
     images.append(image)
     images.append(image)
 
