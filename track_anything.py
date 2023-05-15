@@ -11,20 +11,19 @@ from role_play import generate_self_play_conversation
 
 
 def format_conversation(conversation):
-    # 使用正则表达式提取说话人和内容
+    # use regex to extract speaker and content
     pattern = r"([^\n:]+): ([^\n]+)"
     matches = re.findall(pattern, conversation)
 
-    # 将提取到的说话人和内容转化为指定的输出格式
+    # convert speaker and content to specified format
     dialogue_list = [(0 if m[0] == "Coca-Cola Can" else 1, m[1]) for m in matches]
 
-    # 输出转化后的对话列表
     print(dialogue_list)
     return dialogue_list
 
 
 def format_generated_conversation(dialogue):
-    # 使用正则表达式提取说话人和内容
+    # use regex to extract speaker and content
     pattern = r"\((\d+)\)：(.*?)\n"
     matches = re.findall(pattern, dialogue)
     result = [(int(match[0]), match[1]) for match in matches]
