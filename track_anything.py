@@ -10,22 +10,13 @@ import re
 from role_play import generate_self_play_conversation
 
 
-def format_conversation(conversation):
-    # use regex to extract speaker and content
-    pattern = r"([^\n:]+): ([^\n]+)"
-    matches = re.findall(pattern, conversation)
-
-    # convert speaker and content to specified format
-    dialogue_list = [(0 if m[0] == "Coca-Cola Can" else 1, m[1]) for m in matches]
-
-    print(dialogue_list)
-    return dialogue_list
-
-
-def format_generated_conversation(dialogue):
-    # use regex to extract speaker and content
-    pattern = r"\((\d+)\)：(.*?)\n"
-    matches = re.findall(pattern, dialogue)
+def format_generated_conversation(dialogue, lan):
+    # 使用正则表达式提取说话人和内容
+    pattern_zh = r"\((\d+)\)：(.*?)\n"
+    pattern_en = r"\((\d+)\): (.*?)\n"
+    matches = re.findall(
+        pattern_zh if lan == "zh" or lan == "Chinese" else pattern_en, dialogue
+    )
     result = [(int(match[0]), match[1]) for match in matches]
     return result
 
@@ -39,10 +30,21 @@ class TrackingAnything:
         self.samcontroler = SamControler(
             self.sam_checkpoint, args.sam_model_type, args.device
         )
-        self.xmem = BaseTracker(
-            self.xmem_checkpoint, device=args.device, font_size=args.font_size
-        )
+        self.xmem = BaseTracker(self.xmem_checkpoint, device=args.device)
         self.baseinpainter = BaseInpainter(self.e2fgvi_checkpoint, args.device)
+
+    # def inference_step(self, first_flag: bool, interact_flag: bool, image: np.ndarray,
+    #                    same_image_flag: bool, points:np.ndarray, labels: np.ndarray, logits: np.ndarray=None, multimask=True):
+    #     if first_flag:
+    #         mask, logit, painted_image = self.samcontroler.first_frame_click(image, points, labels, multimask)
+    #         return mask, logit, painted_image
+
+    #     if interact_flag:
+    #         mask, logit, painted_image = self.samcontroler.interact_loop(image, same_image_flag, points, labels, logits, multimask)
+    #         return mask, logit, painted_image
+
+    #     mask, logit, painted_image = self.xmem.track(image, logit)
+    #     return mask, logit, painted_image
 
     def first_frame_click(
         self, image: np.ndarray, points: np.ndarray, labels: np.ndarray, multimask=True
@@ -52,6 +54,10 @@ class TrackingAnything:
         )
         return mask, logit, painted_image
 
+    # def interact(self, image: np.ndarray, same_image_flag: bool, points:np.ndarray, labels: np.ndarray, logits: np.ndarray=None, multimask=True):
+    #     mask, logit, painted_image = self.samcontroler.interact_loop(image, same_image_flag, points, labels, logits, multimask)
+    #     return mask, logit, painted_image
+
     def generator(
         self,
         images: list,
@@ -59,6 +65,10 @@ class TrackingAnything:
         video_description: str,
         objects_descriptions: list,
         language: str,
+        font_size: int = 20,
+        color1: int = 0,
+        color2: int = 0,
+        color3: int = 0,
     ):
         masks = []
         logits = []
@@ -67,12 +77,20 @@ class TrackingAnything:
         self_play_conversation = generate_self_play_conversation(
             video_description, objects_descriptions, lan=language
         )
-        formatted_conversation = format_generated_conversation(self_play_conversation)
+        formatted_conversation = format_generated_conversation(
+            self_play_conversation, language
+        )
         parallel_conversation = self.generate_list(images, formatted_conversation)
         for i in tqdm(range(len(images)), desc="Tracking image"):
             if i == 0:
                 mask, logit, painted_image = self.xmem.track(
-                    images[i], template_mask, cur_turn_dialogue=parallel_conversation[i]
+                    images[i],
+                    template_mask,
+                    cur_turn_dialogue=parallel_conversation[i],
+                    font_size=font_size,
+                    color1=color1,
+                    color2=color2,
+                    color3=color3,
                 )
                 masks.append(mask)
                 logits.append(logit)
@@ -80,12 +98,38 @@ class TrackingAnything:
 
             else:
                 mask, logit, painted_image = self.xmem.track(
-                    images[i], cur_turn_dialogue=parallel_conversation[i]
+                    images[i],
+                    cur_turn_dialogue=parallel_conversation[i],
+                    font_size=font_size,
+                    color1=color1,
+                    color2=color2,
+                    color3=color3,
                 )
                 masks.append(mask)
                 logits.append(logit)
                 painted_images.append(painted_image)
         return masks, logits, painted_images
+
+    def image_to_video_generator(
+        self,
+        template_frame,
+        all_masks: list,
+        image_description: str,
+        objects_descriptions: list,
+        language: str,
+    ):
+        objects_descriptions = "\n".join(objects_descriptions)
+        self_play_conversation = generate_self_play_conversation(
+            image_description, objects_descriptions, lan=language
+        )
+        formatted_conversation = format_generated_conversation(
+            self_play_conversation, language
+        )
+        print(f"formatted_conversation: {formatted_conversation}")
+        all_painted_image_for_video = self.xmem.track_image_for_video(
+            template_frame, all_masks, formatted_conversation
+        )
+        return all_painted_image_for_video
 
     def generate_list(self, first_list, second_list):
         result_list = [
@@ -108,7 +152,7 @@ def parse_augment():
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--mask_save", default=False)
     parser.add_argument("--checkpoints_dir", default="./checkpoints")
-    parser.add_argument("--font_size", default=30, type=int)
+    parser.add_argument("--font_size", default=40, type=int)
     parser.add_argument("--cfg-path", required=True, help="path to configuration file.")
     parser.add_argument(
         "--options",
@@ -131,6 +175,8 @@ if __name__ == "__main__":
     images = []
     image = np.array(PIL.Image.open("/hhd3/gaoshang/truck.jpg"))
     args = parse_augment()
+    # images.append(np.ones((20,20,3)).astype('uint8'))
+    # images.append(np.ones((20,20,3)).astype('uint8'))
     images.append(image)
     images.append(image)
 

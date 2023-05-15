@@ -174,7 +174,7 @@ def get_frames_from_video(video_input, video_state):
     if first_frame is not None:
         chat_state = CONV_VISION.copy()
         img_list = []
-        llm_message = chat.upload_img(first_frame, chat_state, img_list)
+        chat.upload_img(first_frame, chat_state, img_list)
         user_message = "Describe this image."
         chat.ask(user_message, chat_state)
         video_description = chat.answer(
@@ -195,6 +195,10 @@ def get_frames_from_video(video_input, video_state):
         video_state["origin_images"][0],
         gr.update(visible=True, maximum=len(frames), value=1),
         gr.update(visible=True, maximum=len(frames), value=len(frames)),
+        gr.update(visible=True),
+        gr.update(visible=True),
+        gr.update(visible=True),
+        gr.update(visible=True),
         gr.update(visible=True),
         gr.update(visible=True),
         gr.update(visible=True),
@@ -391,7 +395,7 @@ def add_mask_object_detection(video_state, interactive_state):
 
     chat_state = CONV_VISION.copy()
     img_list = []
-    llm_message = chat.upload_img(image_crop_image, chat_state, img_list)
+    chat.upload_img(image_crop_image, chat_state, img_list)
     user_message = "What’s the object name in this image?"
     chat.ask(user_message, chat_state)
     object_description = chat.answer(
@@ -521,7 +525,7 @@ def show_mask(video_state, interactive_state, mask_dropdown):
 
 # tracking vos
 def vos_tracking_video(
-    video_state, interactive_state, mask_dropdown, video_description, language="en"
+    video_state, interactive_state, mask_dropdown, video_description, language="en", font_size=30, color1=0, color2=0, color3=0
 ):
     operation_log = [
         ("", ""),
@@ -585,6 +589,10 @@ def vos_tracking_video(
         video_description=video_description,
         objects_descriptions=objects_descriptions,
         language=language,
+        font_size=int(font_size),
+        color1=int(color1),
+        color2=int(color2),
+        color3=int(color3),
     )
     # clear GPU memory
     model.xmem.clear_memory()
@@ -879,6 +887,39 @@ with gr.Blocks() as iface:
                         ],
                         visible=False,
                     )
+                    font_slider = gr.Slider(
+                        minimum=10,
+                        maximum=100,
+                        step=5,
+                        value=30,
+                        label="Font Size",
+                        visible=False,
+                    )
+                    color1_slider = gr.Slider(
+                        minimum=0,
+                        maximum=255,
+                        step=1,
+                        value=255,
+                        label="Color-1 Selection",
+                        visible=False,
+                    )
+                    color2_slider = gr.Slider(
+                        minimum=0,
+                        maximum=255,
+                        step=1,
+                        value=255,
+                        label="Color-2 Selection",
+                        visible=False,
+                    )
+                    color3_slider = gr.Slider(
+                        minimum=0,
+                        maximum=255,
+                        step=1,
+                        value=255,
+                        label="Color-3 Selection",
+                        visible=False,
+                    )
+
                     lang_dropdown = gr.Dropdown(
                         choices=["English", "Chinese"],
                         value="English",
@@ -921,6 +962,10 @@ with gr.Blocks() as iface:
             tracking_video_predict_button,
             video_output,
             lang_dropdown,
+            font_slider,
+            color1_slider,
+            color2_slider,
+            color3_slider,
             mask_dropdown,
             remove_mask_button,
             inpaint_video_predict_button,
@@ -987,6 +1032,10 @@ with gr.Blocks() as iface:
             mask_dropdown,
             video_description,
             lang_dropdown,
+            font_slider,
+            color1_slider,
+            color2_slider,
+            color3_slider
         ],
         outputs=[video_output, video_state, interactive_state, run_status],
     )

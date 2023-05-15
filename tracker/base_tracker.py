@@ -1,10 +1,7 @@
-# import for debugging
 import os
 import glob
 import numpy as np
-from PIL import Image
 
-# import for base_tracker
 import torch
 import yaml
 import torch.nn.functional as F
@@ -15,16 +12,92 @@ from torchvision import transforms
 from tracker.util.range_transform import im_normalization
 
 from tools.painter import mask_painter
-from tools.base_segmenter import BaseSegmenter
-from torchvision.transforms import Resize
 import progressbar
 import cv2
 from PIL import Image, ImageDraw, ImageFont
 
 
+def add_text_box(image, bbox, img_border, text, font_size, fix_text_box, text_color):
+    font_path = "resources/SourceHanSerifSC-Regular.otf"
+
+    def wrap_text(text, font, fix_text_box):
+        lines = []
+        line = ""
+        for char in text:
+            line += char
+            if font.getsize(line)[0] > fix_text_box[1]:
+                lines.append(line[:-1])
+                line = char
+        lines.append(line)
+        return lines
+
+    def fit_text_in_box(
+        img,
+        text,
+        position,
+        textColor=(254, 234, 0),
+        textSize=30,
+        fix_text_box=None,
+        img_border=None,
+    ):
+        if isinstance(img, np.ndarray):  # Check if the image is of OpenCV type
+            img = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        draw = ImageDraw.Draw(img)
+
+        fontStyle = ImageFont.truetype(font_path, textSize, encoding="utf-8")
+        lines = wrap_text(text, fontStyle, fix_text_box)
+
+        while textSize > 1:
+            total_text_height = len(lines) * fontStyle.getsize(lines[0])[1]
+            if total_text_height <= fix_text_box[0]:
+                break
+            textSize -= 1
+            fontStyle = ImageFont.truetype(font_path, textSize, encoding="utf-8")
+            lines = wrap_text(text, fontStyle, fix_text_box)
+
+        x_start, y_start = position[0], position[1] - (len(lines) + 1) * textSize
+
+        if x_start < 0:
+            x_start = 5
+        elif x_start + fix_text_box[1] > img_border[1]:
+            x_start = img_border[1] - fix_text_box[1]
+
+        if y_start < 0:
+            y_start = 5
+        elif y_start + fix_text_box[0] > img_border[0]:
+            y_start = img_border[0] - fix_text_box[0]
+
+        y_offset = 0
+        for line in lines:
+            draw.text(
+                (x_start, y_start + y_offset),
+                line,
+                textColor,
+                font=fontStyle,
+            )
+            y_offset += fontStyle.getsize(line)[1]
+
+        return cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
+
+    height, width, _ = img_border
+    x1, y1, x2, y2 = bbox
+
+    image = fit_text_in_box(
+        image,
+        text,
+        (x1, y1),
+        textSize=font_size,
+        textColor=text_color,
+        fix_text_box=fix_text_box,
+        img_border=img_border,
+    )
+
+    return image
+
+
 class BaseTracker:
     def __init__(
-        self, xmem_checkpoint, device, sam_model=None, model_type=None, font_size=None
+        self, xmem_checkpoint, device, sam_model=None, model_type=None
     ) -> None:
         """
         device: model device
@@ -45,7 +118,6 @@ class BaseTracker:
             ]
         )
         self.device = device
-        self.font_size = font_size
 
         # changable properties
         self.mapper = MaskMapper()
@@ -67,7 +139,16 @@ class BaseTracker:
         )
 
     @torch.no_grad()
-    def track(self, frame, first_frame_annotation=None, cur_turn_dialogue=None):
+    def track(
+        self,
+        frame,
+        first_frame_annotation=None,
+        cur_turn_dialogue=None,
+        font_size=30,
+        color1=0,
+        color2=0,
+        color3=0,
+    ):
         """
         Input:
         frames: numpy arrays (H, W, 3)
@@ -118,92 +199,54 @@ class BaseTracker:
                 painted_image, (final_mask == obj).astype("uint8"), mask_color=obj + 1
             )
 
-        painted_image = self.add_text_box(
-            painted_image,
-            bbox,
-            frame.shape,
-            cur_turn_dialogue[1],
-            fix_text_box=(3 * self.font_size, 10 * self.font_size),
-        )
-        # print(f'max memory allocated: {torch.cuda.max_memory_allocated()/(2**20)} MB')
+        try:
+            painted_image = add_text_box(
+                painted_image,
+                bbox,
+                frame.shape,
+                cur_turn_dialogue[1],
+                font_size=font_size,
+                text_color=(color1, color2, color3),
+                fix_text_box=(3 * font_size, 10 * font_size),
+            )
+            # print(f'max memory allocated: {torch.cuda.max_memory_allocated()/(2**20)} MB')
+        except:
+            print("Error in adding text box")
+            print(f"bbox:{bbox}")
+            print(f"frame.shape:{frame.shape}")
+            print(f"num_objs:{num_objs}")
 
         return final_mask, final_mask, painted_image
 
-    def add_text_box(self, image, bbox, img_border, text, fix_text_box):
-        font_path = "resources/SourceHanSerifSC-Regular.otf"
-
-        def wrap_text(text, font, fix_text_box):
-            lines = []
-            line = ""
-            for char in text:
-                line += char
-                if font.getsize(line)[0] > fix_text_box[1]:
-                    lines.append(line[:-1])
-                    line = char
-            lines.append(line)
-            return lines
-
-        def fit_text_in_box(
-            img,
-            text,
-            position,
-            textColor=(0, 0, 0),
-            textSize=30,
-            fix_text_box=None,
-            img_border=None,
-        ):
-            if isinstance(img, np.ndarray):  # Check if the image is of OpenCV type
-                img = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-            draw = ImageDraw.Draw(img)
-
-            fontStyle = ImageFont.truetype(font_path, textSize, encoding="utf-8")
-            lines = wrap_text(text, fontStyle, fix_text_box)
-
-            while textSize > 1:
-                total_text_height = len(lines) * fontStyle.getsize(lines[0])[1]
-                if total_text_height <= fix_text_box[0]:
-                    break
-                textSize -= 1
-                fontStyle = ImageFont.truetype(font_path, textSize, encoding="utf-8")
-                lines = wrap_text(text, fontStyle, fix_text_box)
-
-            x_start, y_start = position[0], position[1] - (len(lines) + 1) * textSize
-
-            if x_start < 0:
-                x_start = 5
-            elif x_start + fix_text_box[1] > img_border[1]:
-                x_start = img_border[1] - fix_text_box[1]
-
-            if y_start < 0:
-                y_start = 5
-            elif y_start + fix_text_box[0] > img_border[0]:
-                y_start = img_border[0] - fix_text_box[0]
-
-            y_offset = 0
-            for line in lines:
-                draw.text(
-                    (x_start, y_start + y_offset),
-                    line,
-                    textColor,
-                    font=fontStyle,
-                )
-                y_offset += fontStyle.getsize(line)[1]
-
-            return cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
-
-        height, width, _ = img_border
-        x1, y1, x2, y2 = bbox
-
-        image = fit_text_in_box(
-            image,
-            text,
-            (x1, y1),
-            textSize=self.font_size,
-            fix_text_box=fix_text_box,
-            img_border=img_border,
+    def track_image_for_video(self, frame, all_masks, all_dialogue=None):
+        print(
+            f"frame:{frame}\nlen(all_masks):{len(all_masks)}\nlen(all_dialogue):{len(all_dialogue)}"
         )
+        frame_array = np.array(frame)
+        all_painted_image = []
+        for _, cur_turn_dialogue in enumerate(all_dialogue):
+            bbox = None
+            for mask_idx in range(len(all_masks)):
+                cur_mask = np.array(all_masks[mask_idx])
+                print(f"cur_mask:{cur_mask}\n cur_mask_sum:{np.sum(cur_mask)}")
+                # add text box
+                if cur_turn_dialogue[0] == mask_idx - 1:
+                    bbox = cv2.boundingRect((cur_mask == True).astype("uint8"))
+                    print(bbox)
 
-        return image
+                    painted_image = add_text_box(
+                        frame,
+                        bbox,
+                        frame_array.shape,
+                        cur_turn_dialogue[1],
+                        self.font_size,
+                        fix_text_box=(3 * self.font_size, 10 * self.font_size),
+                    )
+                    all_painted_image.append(painted_image)
+        all_painted_image_for_video = [
+            pi for pi in all_painted_image for _ in range(60)
+        ]
+        return all_painted_image_for_video
 
     @staticmethod
     def get_image_border_pixels(image):
@@ -315,74 +358,3 @@ if __name__ == "__main__":
     for painted_frame in progressbar.progressbar(painted_frames):
         painted_frame = Image.fromarray(painted_frame)
         painted_frame.save(f"{save_path}/{ti:05d}.png")
-
-    # tracker.clear_memory()
-    # for ti, frame in enumerate(frames):
-    #     print(ti)
-    #     # if ti > 200:
-    #     #     break
-    #     if ti == 0:
-    #         mask, prob, painted_image = tracker.track(frame, first_frame_annotation)
-    #     else:
-    #         mask, prob, painted_image = tracker.track(frame)
-    #     # save
-    #     painted_image = Image.fromarray(painted_image)
-    #     painted_image.save(f'/ssd1/gaomingqi/results/TrackA/gsw/{ti:05d}.png')
-
-    # # track anything given in the first frame annotation
-    # for ti, frame in enumerate(frames):
-    #     if ti == 0:
-    #         mask, prob, painted_image = tracker.track(frame, first_frame_annotation)
-    #     else:
-    #         mask, prob, painted_image = tracker.track(frame)
-    #     # save
-    #     painted_image = Image.fromarray(painted_image)
-    #     painted_image.save(f'/ssd1/gaomingqi/results/TrackA/horsejump-high/{ti:05d}.png')
-
-    # # ----------------------------------------------------------
-    # # another video
-    # # ----------------------------------------------------------
-    # # video frames
-    # video_path_list = glob.glob(os.path.join('/ssd1/gaomingqi/datasets/davis/JPEGImages/480p/camel', '*.jpg'))
-    # video_path_list.sort()
-    # # first frame
-    # first_frame_path = '/ssd1/gaomingqi/datasets/davis/Annotations/480p/camel/00000.png'
-    # # load frames
-    # frames = []
-    # for video_path in video_path_list:
-    #     frames.append(np.array(Image.open(video_path).convert('RGB')))
-    # frames = np.stack(frames, 0)    # N, H, W, C
-    # # load first frame annotation
-    # first_frame_annotation = np.array(Image.open(first_frame_path).convert('P'))    # H, W, C
-
-    # print('first video done. clear.')
-
-    # tracker.clear_memory()
-    # # track anything given in the first frame annotation
-    # for ti, frame in enumerate(frames):
-    #     if ti == 0:
-    #         mask, prob, painted_image = tracker.track(frame, first_frame_annotation)
-    #     else:
-    #         mask, prob, painted_image = tracker.track(frame)
-    #     # save
-    #     painted_image = Image.fromarray(painted_image)
-    #     painted_image.save(f'/ssd1/gaomingqi/results/TrackA/camel/{ti:05d}.png')
-
-    # # failure case test
-    # failure_path = '/ssd1/gaomingqi/failure'
-    # frames = np.load(os.path.join(failure_path, 'video_frames.npy'))
-    # # first_frame = np.array(Image.open(os.path.join(failure_path, 'template_frame.png')).convert('RGB'))
-    # first_mask = np.array(Image.open(os.path.join(failure_path, 'template_mask.png')).convert('P'))
-    # first_mask = np.clip(first_mask, 0, 1)
-
-    # for ti, frame in enumerate(frames):
-    #     if ti == 0:
-    #         mask, probs, painted_image = tracker.track(frame, first_mask)
-    #     else:
-    #         mask, probs, painted_image = tracker.track(frame)
-    #     # save
-    #     painted_image = Image.fromarray(painted_image)
-    #     painted_image.save(f'/ssd1/gaomingqi/failure/LJ/{ti:05d}.png')
-    #     prob = Image.fromarray((probs[1].cpu().numpy()*255).astype('uint8'))
-
-    #     # prob.save(f'/ssd1/gaomingqi/failure/probs/{ti:05d}.png')
