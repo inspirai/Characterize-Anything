@@ -4,7 +4,7 @@
 
 Imagine a world where every object around you springs to life. Meet your favorite mug of coffee, chat with your fridge, befriend your sofa.🤩
 
-***Characterize Anything*** is an inspirational interactive tool for characterizing any inanimate object in a video/image so that users could talk with. It combines the power of SOTA video object tracking and large vision language models in order to bring any object to life.
+***Characterize Anything*** is an inspirational interactive tool for characterizing any inanimate object in a video/image so that users could talk with. It combines the power of SOTA video object tracking & segmentation, and large vision language models in order to bring any object to life. Besides, one could specify which object(s) to talk to via simple mouse clicks on a given image or video.
 
 (This project is still under active development to make it into an amazing product.💪)
 
@@ -53,7 +53,7 @@ Checkout some videos for fun: [Youtube | If Objects Could Talk!? | Brent Rivera]
 
 ## 2) Demo
 
-We currently offer two types of demos: 
+We currently offer two types of demos based on Gradio: 
 
 1. **Interactive Static Demo**
    
@@ -62,7 +62,8 @@ We currently offer two types of demos:
 
 2. **Self-Chat Video Demo**
 
-   - You can input a video and select at least two objects that you would like to bring to life. ChatGPT will then imagine conversation between the selected objects in a creative way.
+   - You can input a video and select at least two objects that you would like to bring to life (at the first frame). ChatGPT will then imagine a conversation between the selected objects in a creative way.
+   - The output would be the original video with dialogue lines added and stick to objects
 
 ### 2.1) Interactive Static Demo
 
@@ -77,10 +78,6 @@ We currently offer two types of demos:
 | <video src="https://github.com/inspirai/Characterize-Anything/assets/11401434/f75a2de8-31cb-40c5-8f7a-94ad5e998d9f"> | <video src="https://github.com/inspirai/Characterize-Anything/assets/11401434/dcf575cd-697c-43fe-a241-46b7a69ca803"> |
 
 
-
-
-
-
 ## 3) System Architecture
 
 The self-chat demo pipeline is illustrated as follows:
@@ -88,6 +85,15 @@ The self-chat demo pipeline is illustrated as follows:
 <div align=center>
 <img src="./assets/framework.png"/>
 </div>
+
+Basically, the self-chat video pipeline is consisted of steps:
+
+- Input: A video containing desired objects
+- Visual Control: User clicks on objects that participate in character conversation 
+- Caption Anything: Perform different level of image captions for the 1st frame
+- ChatGPT: Generate a creative conversation between characters based on captions
+- Track Anything: Perform video tracking & segmentation based on SAM and XMem models
+- Output: The original video but with dialogue lines added and stick to objects
 
 ### 3.1) Limitations
 
