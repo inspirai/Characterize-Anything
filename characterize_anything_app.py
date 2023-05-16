@@ -891,7 +891,7 @@ with gr.Blocks() as iface:
                         minimum=10,
                         maximum=100,
                         step=5,
-                        value=30,
+                        value=40,
                         label="Font Size",
                         visible=False,
                     )
@@ -899,7 +899,7 @@ with gr.Blocks() as iface:
                         minimum=0,
                         maximum=255,
                         step=1,
-                        value=255,
+                        value=0,
                         label="Color-1 Selection",
                         visible=False,
                     )
@@ -907,7 +907,7 @@ with gr.Blocks() as iface:
                         minimum=0,
                         maximum=255,
                         step=1,
-                        value=255,
+                        value=0,
                         label="Color-2 Selection",
                         visible=False,
                     )
@@ -915,7 +915,7 @@ with gr.Blocks() as iface:
                         minimum=0,
                         maximum=255,
                         step=1,
-                        value=255,
+                        value=0,
                         label="Color-3 Selection",
                         visible=False,
                     )

@@ -33,19 +33,6 @@ class TrackingAnything:
         self.xmem = BaseTracker(self.xmem_checkpoint, device=args.device)
         self.baseinpainter = BaseInpainter(self.e2fgvi_checkpoint, args.device)
 
-    # def inference_step(self, first_flag: bool, interact_flag: bool, image: np.ndarray,
-    #                    same_image_flag: bool, points:np.ndarray, labels: np.ndarray, logits: np.ndarray=None, multimask=True):
-    #     if first_flag:
-    #         mask, logit, painted_image = self.samcontroler.first_frame_click(image, points, labels, multimask)
-    #         return mask, logit, painted_image
-
-    #     if interact_flag:
-    #         mask, logit, painted_image = self.samcontroler.interact_loop(image, same_image_flag, points, labels, logits, multimask)
-    #         return mask, logit, painted_image
-
-    #     mask, logit, painted_image = self.xmem.track(image, logit)
-    #     return mask, logit, painted_image
-
     def first_frame_click(
         self, image: np.ndarray, points: np.ndarray, labels: np.ndarray, multimask=True
     ):
@@ -53,10 +40,6 @@ class TrackingAnything:
             image, points, labels, multimask
         )
         return mask, logit, painted_image
-
-    # def interact(self, image: np.ndarray, same_image_flag: bool, points:np.ndarray, labels: np.ndarray, logits: np.ndarray=None, multimask=True):
-    #     mask, logit, painted_image = self.samcontroler.interact_loop(image, same_image_flag, points, labels, logits, multimask)
-    #     return mask, logit, painted_image
 
     def generator(
         self,
@@ -80,7 +63,9 @@ class TrackingAnything:
         formatted_conversation = format_generated_conversation(
             self_play_conversation, language
         )
-        parallel_conversation = self.generate_list(images, formatted_conversation)
+        parallel_conversation = self.generate_list(
+            images, formatted_conversation, type="fixed", language=language
+        )
         for i in tqdm(range(len(images)), desc="Tracking image"):
             if i == 0:
                 mask, logit, painted_image = self.xmem.track(
@@ -131,11 +116,35 @@ class TrackingAnything:
         )
         return all_painted_image_for_video
 
-    def generate_list(self, first_list, second_list):
-        result_list = [
-            second_list[int(i // (len(first_list) / len(second_list)))]
-            for i in range(len(first_list))
-        ]
+    def generate_list(
+        self, first_list, second_list, type="fixed", fps=30, language="zh"
+    ):
+        # round robin
+        if type == "round_robin":
+            result_list = [
+                second_list[int(i // (len(first_list) / len(second_list)))]
+                for i in range(len(first_list))
+            ]
+        else:
+            result_list = []
+            for item in second_list:
+                id, sentence = item
+                sentence_length = (
+                    len(sentence)
+                    if language == "zh" or language == "Chinese"
+                    else len(sentence.split(" "))
+                )
+                copy_count = (
+                    int((sentence_length / 5) * fps)
+                    if language == "zh" or language == "Chinese"
+                    else int((sentence_length / 2) * fps)
+                )
+                result_list.extend([item] * copy_count)
+            if len(result_list) > len(first_list):
+                result_list = result_list[: len(first_list)]
+            else:
+                while len(result_list) < len(first_list):
+                    result_list.append(result_list[-1])
         return result_list
 
 
