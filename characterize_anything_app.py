@@ -17,10 +17,6 @@ import psutil
 import time
 from typing import Union
 
-try:
-    pass
-except:
-    os.system("mim install mmcv")
 import numpy as np
 import torch
 import gradio as gr
@@ -525,7 +521,15 @@ def show_mask(video_state, interactive_state, mask_dropdown):
 
 # tracking vos
 def vos_tracking_video(
-    video_state, interactive_state, mask_dropdown, video_description, language="en", font_size=30, color1=0, color2=0, color3=0
+    video_state,
+    interactive_state,
+    mask_dropdown,
+    video_description,
+    language="en",
+    font_size=30,
+    color1=0,
+    color2=0,
+    color3=0,
 ):
     operation_log = [
         ("", ""),
@@ -1035,7 +1039,7 @@ with gr.Blocks() as iface:
             font_slider,
             color1_slider,
             color2_slider,
-            color3_slider
+            color3_slider,
         ],
         outputs=[video_output, video_state, interactive_state, run_status],
     )

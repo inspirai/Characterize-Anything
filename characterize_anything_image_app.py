@@ -16,10 +16,6 @@ from tools.painter import mask_painter
 import time
 from typing import Union
 
-try:
-    pass
-except:
-    os.system("mim install mmcv")
 import numpy as np
 import torch
 import gradio as gr
