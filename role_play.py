@@ -67,7 +67,9 @@ Generate a dialogue between the objects based on the scene and object descriptio
     message = [
         {
             "role": "system",
-            "content": prompt_template_zh if lan == "zh" or lan == "Chinese" else prompt_template_en,
+            "content": prompt_template_zh
+            if lan == "zh" or lan == "Chinese"
+            else prompt_template_en,
         }
     ]
     print(f"message: {json.dumps(message, indent=4, ensure_ascii=False)}")
