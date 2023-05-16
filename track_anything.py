@@ -11,7 +11,6 @@ from role_play import generate_self_play_conversation
 
 
 def format_generated_conversation(dialogue, lan):
-    # 使用正则表达式提取说话人和内容
     pattern_zh = r"\((\d+)\)：(.*?)\n"
     pattern_en = r"\((\d+)\): (.*?)\n"
     matches = re.findall(
