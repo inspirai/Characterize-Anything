@@ -308,7 +308,7 @@ def add_mask_object_detection(image_state, interactive_state):
     # todo: object description
     chat_state = CONV_VISION.copy()
     img_list = []
-    llm_message = chat.upload_img(image_crop_image, chat_state, img_list)
+    chat.upload_img(image_crop_image, chat_state, img_list)
     user_message = "What’s the object name in this image?"
     chat.ask(user_message, chat_state)
     object_description = chat.answer(
@@ -503,7 +503,11 @@ def generate_prologue(object_description, language="English"):
     # todo: generate prologue
     prologue_prompt_zh = f"根据一段描述，生成一段描述中包含物体的开场白。\n例如：\n描述：The object in this image is a can of Coke.\n开场白：你好啊，我是一罐可乐. 根据以下描述生成开场白：\n描述: {object_description} \n开场白："
     prologue_prompt_en = f"Based on a given description, create a prologue that includes the object(s). \nexample:\ndescription: The object in this image is a can of Coke.\nprologue: Hi, I am a can of cocacola. \nGenerate prologue based on the following description:\ndescription: {object_description} \nprologue:"
-    prompt = prologue_prompt_zh if language == 'zh' or language == 'Chinese' else prologue_prompt_en
+    prompt = (
+        prologue_prompt_zh
+        if language == "zh" or language == "Chinese"
+        else prologue_prompt_en
+    )
     message = [
         {
             "role": "system",
@@ -512,11 +516,15 @@ def generate_prologue(object_description, language="English"):
     ]
     response = make_completion(message)
     # 根据mask number cache generated prologue
-    print(f"{json.dumps({'message': message, 'response': response}, indent=2, ensure_ascii=False)}")
+    print(
+        f"{json.dumps({'message': message, 'response': response}, indent=2, ensure_ascii=False)}"
+    )
     return response
 
 
-def init_chatbot(interactive_state, mask_dropdown, language_dropdown, image_description,language="English"):
+def init_chatbot(
+    interactive_state, mask_dropdown, language_dropdown, image_description
+):
     # get chatbot prologue
     masks_object = interactive_state["masks_object"]
 
@@ -525,7 +533,7 @@ def init_chatbot(interactive_state, mask_dropdown, language_dropdown, image_desc
         mask_number = int(mask_dropdown[i].split("_")[1]) - 1
         active_masks.append(masks_object[mask_number])
 
-    prologue = ''
+    prologue = ""
     if len(active_masks) == 0:
         init_msg = [(None, "Please select a mask first.")]
     elif len(active_masks) > 1:
@@ -541,12 +549,60 @@ def init_chatbot(interactive_state, mask_dropdown, language_dropdown, image_desc
     message = [
         {
             "role": "system",
-            "content": prompt_zh if language == 'Chinese' else prompt_en
+            "content": prompt_zh if language_dropdown == "Chinese" else prompt_en,
         },
+        {"role": "assistant", "content": prologue},
+    ]
+
+    return init_msg, message
+
+
+def get_img_self_chat(
+    chatbot,
+    image_state,
+    template_frame,
+    interactive_state,
+    mask_dropdown,
+    language_dropdown,
+    image_description,
+):
+    objects_descriptions = []
+    for i in range(len(mask_dropdown)):
+        mask_number = int(mask_dropdown[i].split("_")[1]) - 1
+        objects_descriptions.append(
+            f"{mask_number}. {interactive_state['masks_object'][mask_number]}"
+        )
+    all_masks = interactive_state["multi_mask"]["masks"]
+    if len(objects_descriptions) < 0:
+        chatbot = [(None, "Please select a mask first.")]
+
+    all_painted_image_for_video = model.image_to_video_generator(
+        template_frame,
+        all_masks,
+        image_description,
+        objects_descriptions,
+        language_dropdown,
+    )
+
+    # clear GPU memory
+    model.xmem.clear_memory()
+    video_output = generate_video_from_frames(
+        all_painted_image_for_video,
+        output_path="./result/track/{}".format(image_state["image_name"]),
+        fps=30,
+    )  # import video_input to name the output video
+    return chatbot, video_output
+
+    # todo: hide chat with me button
+    # show user input box
+    prompt_zh = f"根据提供的图片描述、物体描述、物体开场白，接下来你要扮演这个物体，跟人类完成下面的对话，尽量保证对话自然、有趣，每次对话长度不要太长：\n\n图片描述: {image_description}\n物体描述: {masks_object[0]}\n"
+    prompt_en = f"According to the provided image description, object description, and object prologue, you are going to play the role of this object and have a conversation with humans. Please try to make the conversation natural and interesting, and keep the length of each dialogue not too long.\n\nimage description: {image_description}\nobject description: {masks_object[0]}\n"
+    message = [
         {
-            "role": "assistant",
-            "content": prologue
-        }
+            "role": "system",
+            "content": prompt_zh if language == "Chinese" else prompt_en,
+        },
+        {"role": "assistant", "content": prologue},
     ]
 
     return init_msg, message
@@ -557,7 +613,6 @@ def user(user_message, history):
 
 
 def predict(query, history):
-
     history.append({"role": "user", "content": query})
     # todo: chatgpt response
     # response = "this is a response"
@@ -613,7 +668,6 @@ with gr.Blocks() as iface:
     with gr.Row():
         # for user video input
         with gr.Column():
-
             image_input = gr.Image(
                 type="pil", interactive=True, elem_id="image_upload"
             ).style(height=480)
@@ -692,10 +746,17 @@ with gr.Blocks() as iface:
             )
 
             chat_button = gr.Button(
-                value="Chat with me", interactive=True, visible=True
+                value="Chat with me (one object)", interactive=True, visible=True
+            )
+
+            self_chat_button = gr.Button(
+                value="Objects self chat (multi objects)",
+                interactive=True,
+                visible=True,
             )
 
             chatbot = gr.Chatbot(label="Chatbox").style(height=550, scale=0.5)
+            video_output = gr.Video(autosize=True, visible=False).style(height=360)
 
             msg = gr.Textbox(
                 placeholder="Enter text and press enter",
@@ -752,7 +813,27 @@ with gr.Blocks() as iface:
     )
 
     chat_button.click(
-        fn=init_chatbot, inputs=[interactive_state, mask_dropdown, lang_dropdown, image_description,lang_dropdown], outputs=[chatbot, message_state]
+        fn=init_chatbot,
+        inputs=[interactive_state, mask_dropdown, lang_dropdown, image_description],
+        outputs=[chatbot, message_state],
+    )
+
+    self_chat_button.click(
+        fn=lambda x, y: (gr.update(visible=False), gr.update(visible=True)),
+        inputs=[chatbot, video_output],
+        outputs=[chatbot, video_output],
+    ).then(
+        fn=get_img_self_chat,
+        inputs=[
+            chatbot,
+            image_state,
+            template_frame,
+            interactive_state,
+            mask_dropdown,
+            lang_dropdown,
+            image_description,
+        ],
+        outputs=[chatbot, message_state],
     )
 
     msg.submit(user, [msg, chatbot], chatbot, queue=False).then(
