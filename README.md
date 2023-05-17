@@ -75,7 +75,7 @@ We currently offer two types of demos based on Gradio:
 
 | English Demo                                                                                                        | Chinese Demo                                                                                                        |
 |---------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
-| <video src="https://github.com/inspirai/Characterize-Anything/assets/11401434/f0d06b2b-fff5-44b6-88a5-5aa215cd7f13"> | <video src="https://github.com/inspirai/Characterize-Anything/assets/11401434/f76b597b-893c-4116-b21a-f639a4cd8259"> |
+| <video src="https://github.com/inspirai/Characterize-Anything/assets/11401434/0a2ca94a-0989-45ba-b9ea-96e08c67ce6a"> | <video src="https://github.com/inspirai/Characterize-Anything/assets/11401434/0fa80479-0a4b-417a-9ad8-8b215d861f68"> |
 
 ## 3) System Architecture
 
