@@ -72,6 +72,7 @@ Here we propose some prompting tips, namely:
 - Few-shot anti-hack examples 
 - Use 3rd-person format
 - [Negative-guidance](https://book.character.ai/character-book/advanced-creation/negative-guidance) trick from character.ai
+- More to read
 
 #### 3.1 Utilize few-shot examples
 
@@ -221,3 +222,7 @@ The 1st-person format (left) results in poor responses when asked "forget your p
 #### 3.3 Negative Guidance
 
 We encourage readers to explore the interesting [negative-guidance](https://book.character.ai/character-book/advanced-creation/negative-guidance) trick themselves! It's all about setting a guiding scenario at first.
+
+#### 3.4 More to read
+
+See [prompt engineering tutorials](https://github.com/brexhq/prompt-engineering) and understand what prompt hacking is about. 
