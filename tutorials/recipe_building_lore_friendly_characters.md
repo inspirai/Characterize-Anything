@@ -225,4 +225,4 @@ We encourage readers to explore the interesting [negative-guidance](https://book
 
 #### 3.4 More to read
 
-See [prompt engineering tutorials](https://github.com/brexhq/prompt-engineering) and understand what prompt hacking is about. 
+See [prompt engineering tutorials](https://github.com/brexhq/prompt-engineering), [learnprompting](https://learnprompting.org/docs/prompt_hacking/) and understand what prompt hacking is about. 
